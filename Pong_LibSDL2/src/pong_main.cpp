@@ -40,7 +40,7 @@ SDL_Window* initSDL(SDL_Window* window)
 	}
 
 	// Initialize renderer color
-	SDL_SetRenderDrawColor(gRenderer, 0x0, 0x0, 0x0, 0x0 );
+	SDL_SetRenderDrawColor(gRenderer, 0x0, 0x0, 0x0, SDL_ALPHA_OPAQUE );
 
 	// init png support
 	IMG_Init(IMG_INIT_PNG);

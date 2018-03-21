@@ -20,6 +20,9 @@ public:
 	void init();
 	void render();
 	void update(Ball &ball);
+
+	SDL_Rect getRect();
+
 	virtual ~AiPaddle();
 
 private:

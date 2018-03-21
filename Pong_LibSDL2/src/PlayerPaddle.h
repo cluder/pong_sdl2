@@ -23,6 +23,13 @@ public:
 	void update();
 	virtual ~PlayerPaddle();
 
+	SDL_Rect getRect();
+
+	int getX() {return x;}
+	int getY() {return y;}
+
+	int getTexW() {return texW;}
+	int getTexH() {return texH;}
 private:
 	int texW = 0;
 	int texH = 0;

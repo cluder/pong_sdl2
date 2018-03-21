@@ -30,6 +30,8 @@ public:
 	void update();
 
 	void drawUI();
+	void checkCollision();
+	void restartRound();
 
 	PlayerPaddle &getPlayer()  {return player;}
 

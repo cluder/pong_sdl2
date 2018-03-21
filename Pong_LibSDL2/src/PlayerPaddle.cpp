@@ -76,7 +76,16 @@ void PlayerPaddle::update() {
 	if (y + this->texH > windowSize.h) {
 		y = windowSize.h - this->texH;
 	}
+}
 
+SDL_Rect PlayerPaddle::getRect() {
+	SDL_Rect rect;
+	rect.x = x;
+	rect.y = y;
+	rect.w = texW;
+	rect.h = texH;
+
+	return rect;
 }
 
 PlayerPaddle::~PlayerPaddle() {

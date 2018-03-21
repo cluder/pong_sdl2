@@ -17,7 +17,7 @@ void AiPaddle::update(Ball &ball) {
 
 	// cheater !!
 	this->y = ball.getY();
-	this->y -= this->texH/2;
+//	this->y -= this->texH/2;
 
 }
 
@@ -35,10 +35,20 @@ void AiPaddle::render() {
 	SDL_Rect dstRect;
 	dstRect.x = x;
 	dstRect.y = y;
-	dstRect.h = texH;
+	dstRect.h = texH/2;
 	dstRect.w = texW;
 
 	SDL_RenderCopy(pRenderer, tex, NULL, &dstRect);
+}
+
+SDL_Rect AiPaddle::getRect() {
+	SDL_Rect rect;
+	rect.x = x;
+	rect.y = y;
+	rect.w = texW;
+	rect.h = texH;
+
+	return rect;
 }
 
 AiPaddle::~AiPaddle() {

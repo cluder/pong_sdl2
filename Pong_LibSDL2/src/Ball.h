@@ -21,7 +21,29 @@ public:
 	void update();
 	virtual ~Ball();
 
+	SDL_Rect getRect();
+
+	int getX() {return x;}
+	void setX(int x) {this->x = x;}
+
+	int getTexW() {return this->texW;}
+	void setTexW(int x) {this->texW = x;}
+
 	int getY() {return y;}
+	void setY(int y) {this->y = y;}
+
+	int getTexH() {return this->texH;}
+	void setTexH(int y) {this->texH = y;}
+
+	float getSpeed() const {return speed;}
+	void setSpeed(float speed) {this->speed = speed;}
+
+	float getXVelocity() const {return xVelocity;}
+	void setXVelocity(float velocity) {xVelocity = velocity;}
+
+	float getYVelocity() const {return yVelocity;}
+	void setYVelocity(float velocity) {yVelocity = velocity;}
+
 private:
 	SDL_Renderer *pRenderer = NULL;
 	SDL_Texture *tex = NULL;
