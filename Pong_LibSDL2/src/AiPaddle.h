@@ -33,7 +33,8 @@ private:
 	SDL_Texture* tex = NULL;
 	SDL_Renderer* pRenderer = NULL;
 
-	float paddleSpeed = 10;
+	float ySpeed = 6;
+	float yVelocity = ySpeed;
 };
 
 #endif /* SRC_AIPADDLE_H_ */

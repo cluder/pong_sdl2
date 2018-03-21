@@ -15,9 +15,15 @@ AiPaddle::AiPaddle(SDL_Renderer* renderer, int x, int y) {
 
 void AiPaddle::update(Ball &ball) {
 
-	// cheater !!
-	this->y = ball.getY();
-//	this->y -= this->texH/2;
+//	paddle.velocity = ball.getY() - paddle.getY() ? -1 : 1 * PADDLE_VELOCITY
+
+	if (this->y < ball.getY()) {
+		this->yVelocity = this->ySpeed;
+	} else {
+		this->yVelocity = this->ySpeed * -1;
+	}
+
+	this->y += yVelocity;
 
 }
 
@@ -35,7 +41,7 @@ void AiPaddle::render() {
 	SDL_Rect dstRect;
 	dstRect.x = x;
 	dstRect.y = y;
-	dstRect.h = texH/2;
+	dstRect.h = texH;
 	dstRect.w = texW;
 
 	SDL_RenderCopy(pRenderer, tex, NULL, &dstRect);

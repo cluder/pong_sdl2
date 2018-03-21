@@ -60,7 +60,6 @@ void GameManager::update() {
 	ai.update(ball);
 
 	checkCollision();
-
 }
 
 void GameManager::checkCollision() {
@@ -78,6 +77,8 @@ void GameManager::checkCollision() {
 		// bounce
 		ball.setX(playerRect.x + playerRect.w);
 		ball.setXVelocity(ball.getSpeed());
+
+		ball.hit();
 	}
 
 	if (SDL_IntersectRect(&ballRect, &aiRect, &result) == SDL_TRUE) {
@@ -86,6 +87,8 @@ void GameManager::checkCollision() {
 		// bounce
 		ball.setX(aiRect.x - ballRect.w);
 		ball.setXVelocity(ball.getSpeed() * -1);
+
+		ball.hit();
 	}
 
 	// check play field collision
@@ -125,6 +128,8 @@ void GameManager::restartRound() {
 	SDL_RenderGetViewport(pRenderer, &windowSize);
 
 	// reset ball position
+	ball.resetSpeed();
+
 	ball.setX(windowSize.w/2);
 	ball.setY(windowSize.h/2);
 

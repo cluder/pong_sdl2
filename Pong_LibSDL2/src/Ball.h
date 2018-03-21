@@ -21,6 +21,8 @@ public:
 	void update();
 	virtual ~Ball();
 
+	void hit() { if (speed < maxSpeed) speed *= 1.05;};
+	void resetSpeed() {speed = initialSpeed;}
 	SDL_Rect getRect();
 
 	int getX() {return x;}
@@ -52,8 +54,10 @@ private:
 	int texW = 0;
 	int texH = 0;
 
-	// movement
-	float speed = 3;
+	// movement speed
+	float initialSpeed = 4;
+	float speed = initialSpeed;
+	float maxSpeed = 12;
 
 	float xVelocity = speed;
 	float yVelocity = speed;
@@ -61,3 +65,4 @@ private:
 };
 
 #endif /* SRC_BALL_H_ */
+

@@ -9,8 +9,8 @@
 
 using namespace std;
 
-const int SCREEN_WIDTH = 600;
-const int SCREEN_HEIGHT = 400;
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 500;
 
 SDL_Renderer* gRenderer = NULL;
 
