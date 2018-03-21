@@ -20,7 +20,7 @@ public:
 	void init();
 	void handleEvent(SDL_Event &e);
 	void render();
-	void update();
+	void update(Uint32 tpf);
 	virtual ~PlayerPaddle();
 
 	SDL_Rect getRect();
@@ -38,7 +38,7 @@ private:
 	SDL_Texture* tex = NULL;
 	SDL_Renderer* pRenderer = NULL;
 
-	float paddleSpeed = 7;
+	float paddleSpeed = 400;
 	bool moveUp = false;
 	bool moveDown = false;
 };

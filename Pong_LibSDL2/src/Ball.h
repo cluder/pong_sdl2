@@ -18,10 +18,11 @@ public:
 	Ball(SDL_Renderer* gRenderer, int y, int x);
 	void init();
 	void render();
-	void update();
+	void update(Uint32 tpf);
 	virtual ~Ball();
 
-	void hit() { if (speed < maxSpeed) speed *= 1.05;};
+	// hit a paddle - increase speed
+	void hit() { if (speed < maxSpeed) speed *= 1.2;};
 	void resetSpeed() {speed = initialSpeed;}
 	SDL_Rect getRect();
 
@@ -55,7 +56,7 @@ private:
 	int texH = 0;
 
 	// movement speed
-	float initialSpeed = 4;
+	float initialSpeed = 300;
 	float speed = initialSpeed;
 	float maxSpeed = 12;
 

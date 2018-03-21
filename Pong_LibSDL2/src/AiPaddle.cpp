@@ -13,9 +13,7 @@ AiPaddle::AiPaddle(SDL_Renderer* renderer, int x, int y) {
 	this->pRenderer = renderer;
 }
 
-void AiPaddle::update(Ball &ball) {
-
-//	paddle.velocity = ball.getY() - paddle.getY() ? -1 : 1 * PADDLE_VELOCITY
+void AiPaddle::update(Uint32 tpf, Ball &ball) {
 
 	if (this->y < ball.getY()) {
 		this->yVelocity = this->ySpeed;
@@ -23,7 +21,7 @@ void AiPaddle::update(Ball &ball) {
 		this->yVelocity = this->ySpeed * -1;
 	}
 
-	this->y += yVelocity;
+	this->y += yVelocity * ((float)tpf/(float)1000);
 
 }
 

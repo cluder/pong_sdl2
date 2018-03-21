@@ -27,8 +27,9 @@ public:
 	// render all objects
 	void render();
 	// update all objects
-	void update();
+	void update(Uint32 tpf);
 
+	void drawFps();
 	void drawUI();
 	void checkCollision();
 	void restartRound();
@@ -48,7 +49,11 @@ private:
 	int screenW = 0;
 	int screenH = 0;
 
+	int fps = 0;
+	Uint32 lastFpsUpdate = 0;
+
 	TTF_Font* scoreFont = NULL;
+	TTF_Font* fpsFont = NULL;
 
 	void renderScore(int score, int x, int y);
 };

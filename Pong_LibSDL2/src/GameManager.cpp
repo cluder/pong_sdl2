@@ -7,13 +7,14 @@
 
 #include "GameManager.h"
 
-SDL_Rect posPlayerScore;
+SDL_Rect fpsRect;
 
 void GameManager::init(int screenW, int screenH) {
 	this->screenW = screenW;
 	this->screenH = screenH;
 
 	this->scoreFont = TTF_OpenFont("img/OpenSans-Regular.ttf", 40);
+	this->fpsFont = TTF_OpenFont("img/OpenSans-Regular.ttf", 20);
 }
 
 bool GameManager::handleInput() {
@@ -54,12 +55,19 @@ void GameManager::render() {
 	SDL_RenderPresent(pRenderer);
 }
 
-void GameManager::update() {
-	player.update();
-	ball.update();
-	ai.update(ball);
+// tpf: time per frame
+void GameManager::update(Uint32 tpf) {
+	player.update(tpf);
+	ball.update(tpf);
+	ai.update(tpf, ball);
 
 	checkCollision();
+
+	Uint32 now = SDL_GetTicks();
+	if (lastFpsUpdate < now-300) {
+		fps = (float)1000/(float)tpf;
+		lastFpsUpdate = SDL_GetTicks();
+	}
 }
 
 void GameManager::checkCollision() {
@@ -134,7 +142,6 @@ void GameManager::restartRound() {
 	ball.setY(windowSize.h/2);
 
 	ball.setXVelocity(ball.getXVelocity() * -1);
-
 }
 
 void GameManager::renderScore(int score, int x, int y) {
@@ -149,11 +156,11 @@ void GameManager::renderScore(int score, int x, int y) {
 	int texW;
 	int texH;
 	SDL_QueryTexture(playerScoreTex, NULL, NULL, &texW, &texH);
-	posPlayerScore.x = x;
-	posPlayerScore.y = y;
-	posPlayerScore.w = texW;
-	posPlayerScore.h = texH;
-	SDL_RenderCopy(pRenderer, playerScoreTex, NULL, &posPlayerScore);
+	fpsRect.x = x;
+	fpsRect.y = y;
+	fpsRect.w = texW;
+	fpsRect.h = texH;
+	SDL_RenderCopy(pRenderer, playerScoreTex, NULL, &fpsRect);
 }
 
 void GameManager::drawUI() {
@@ -167,6 +174,29 @@ void GameManager::drawUI() {
 	renderScore(playerScore, screenW / 2 - 100, 30);
 	// ai score
 	renderScore(aiScore, screenW / 2 + 100, 30);
+	// show fps
+	drawFps();
+}
+
+void GameManager::drawFps() {
+	string sFps = "FPS: " +std::to_string(fps);
+
+	SDL_Color color = { 255, 255, 0 };
+	SDL_Surface* tmpSurface = TTF_RenderText_Solid(fpsFont,
+			sFps.c_str(), color);
+	SDL_Texture* tex = SDL_CreateTextureFromSurface(pRenderer,
+			tmpSurface);
+	int texW;
+	int texH;
+	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
+	SDL_FreeSurface(tmpSurface);
+	fpsRect.x = 20;
+	fpsRect.y = 20;
+	fpsRect.w = texW;
+	fpsRect.h = texH;
+
+	SDL_RenderCopy(pRenderer, tex, NULL, &fpsRect);
+
 }
 
 GameManager::~GameManager() {

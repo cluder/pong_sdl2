@@ -19,7 +19,7 @@ public:
 	AiPaddle(SDL_Renderer* gRenderer, int x, int y);
 	void init();
 	void render();
-	void update(Ball &ball);
+	void update(Uint32 tpf, Ball &ball);
 
 	SDL_Rect getRect();
 
@@ -33,7 +33,7 @@ private:
 	SDL_Texture* tex = NULL;
 	SDL_Renderer* pRenderer = NULL;
 
-	float ySpeed = 6;
+	float ySpeed = 320;
 	float yVelocity = ySpeed;
 };
 

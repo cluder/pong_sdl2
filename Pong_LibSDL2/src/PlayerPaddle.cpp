@@ -50,7 +50,7 @@ void PlayerPaddle::handleEvent(SDL_Event &e) {
 
 }
 
-void PlayerPaddle::update() {
+void PlayerPaddle::update(Uint32 tpf) {
 
 	if (moveUp && moveDown) {
 		return;
@@ -65,7 +65,7 @@ void PlayerPaddle::update() {
 		velocity = paddleSpeed*-1;
 	}
 
-	y += velocity;
+	y += velocity * (tpf/1000.f);
 
 	SDL_Rect windowSize;
 	SDL_RenderGetViewport(pRenderer, &windowSize);

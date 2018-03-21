@@ -34,7 +34,9 @@ SDL_Window* initSDL(SDL_Window* window)
 	}
 
 	gRenderer = SDL_CreateRenderer(window, -1,
-			SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+			SDL_RENDERER_ACCELERATED
+			//| SDL_RENDERER_PRESENTVSYNC
+			);
 	if (gRenderer == NULL) {
 		cerr << "error creating renderer" << endl;
 	}
@@ -55,16 +57,26 @@ void mainLoop(GameManager &manager)
 {
 	// main loop
 	bool quit = false;
+	Uint32 lastFrame = SDL_GetTicks();
 	do
 	{
+		Uint32 current = SDL_GetTicks();
+		Uint32 tpf = current - lastFrame;
+		lastFrame = current;
+
 		// check for key presses / exit
 		quit = manager.handleInput();
 
 		// update player paddle position
-		manager.update();
+		manager.update(tpf);
 
 		// render scene
 		manager.render();
+
+		if (tpf < 10) {
+			// limit to max 100 fps
+			SDL_Delay(10);
+		}
 
 	} while (!quit);
 }
