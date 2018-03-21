@@ -1,0 +1,85 @@
+/*
+ * PlayerPaddle.cpp
+ *
+ *  Created on: 18.03.2018
+ *      Author: core
+ */
+
+#include "PlayerPaddle.h"
+
+
+PlayerPaddle::PlayerPaddle(SDL_Renderer* renderer, int x, int y) {
+	this->x = x;
+	this->y = y;
+	this->pRenderer = renderer;
+}
+
+void PlayerPaddle::init() {
+	tex = IMG_LoadTexture(pRenderer, "img/paddle.bmp");
+}
+
+void PlayerPaddle::render() {
+	// draw player paddle
+	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
+
+	SDL_Rect dstRect;
+	dstRect.x = x;
+	dstRect.y = y;
+	dstRect.h = texH;
+	dstRect.w = texW;
+
+	SDL_RenderCopy(pRenderer, tex, NULL, &dstRect);
+}
+
+void PlayerPaddle::handleEvent(SDL_Event &e) {
+	if (e.key.keysym.sym == SDLK_UP) {
+		if (e.type == SDL_KEYDOWN) {
+			moveUp = true;
+		} else if (e.type == SDL_KEYUP) {
+			moveUp = false;
+		}
+	}
+
+	if (e.key.keysym.sym == SDLK_DOWN) {
+		if (e.type == SDL_KEYDOWN) {
+			moveDown = true;
+		} else if (e.type == SDL_KEYUP) {
+			moveDown = false;
+		}
+	}
+
+}
+
+void PlayerPaddle::update() {
+
+	if (moveUp && moveDown) {
+		return;
+	}
+
+	float velocity = 0;
+	if (moveDown) {
+		velocity = paddleSpeed;
+	}
+
+	if (moveUp) {
+		velocity = paddleSpeed*-1;
+	}
+
+	y += velocity;
+
+	SDL_Rect windowSize;
+	SDL_RenderGetViewport(pRenderer, &windowSize);
+
+	if (y < 0) {
+		y = 0;
+	}
+	if (y + this->texH > windowSize.h) {
+		y = windowSize.h - this->texH;
+	}
+
+}
+
+PlayerPaddle::~PlayerPaddle() {
+    SDL_DestroyTexture(tex);
+}
+
