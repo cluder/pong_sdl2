@@ -15,12 +15,18 @@ PlayerPaddle::PlayerPaddle(SDL_Renderer* renderer, int x, int y) {
 }
 
 void PlayerPaddle::init() {
-	tex = IMG_LoadTexture(pRenderer, "img/paddle.bmp");
+	tex = IMG_LoadTexture(pRenderer, "res/paddle.bmp");
+
+	// query and save texture size
+	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
+
+	// we want to draw the paddle at location 'x'
+	// adjust x to be in the center of the paddle
+	x = x-texW/2;
 }
 
 void PlayerPaddle::render() {
-	// draw player paddle
-	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
+
 
 	SDL_Rect dstRect;
 	dstRect.x = x;

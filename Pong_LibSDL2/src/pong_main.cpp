@@ -13,14 +13,15 @@ const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 500;
 
 SDL_Renderer* gRenderer = NULL;
-
 SDL_Texture *gBall;
+
+void print_init_flags(int flags);
 
 // ini SDL
 SDL_Window* initSDL(SDL_Window* window)
 {
 	// Initialize SDL
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO) < 0) {
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 		return NULL;
 	}
@@ -46,6 +47,21 @@ SDL_Window* initSDL(SDL_Window* window)
 
 	// init png support
 	IMG_Init(IMG_INIT_PNG);
+
+	// init sdl_mixer ogg support
+	int flags = MIX_INIT_OGG;
+	int initted = Mix_Init(flags);
+
+	if ((initted & flags) != flags) {
+		cerr << "error initializing SDL_mixer:" << SDL_GetError() << endl;
+		exit (-1);
+	}
+
+	int err = Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+	if (err < 0) {
+		cerr << "error initializing SDL_mixer:" << SDL_GetError() << endl;
+		exit (-1);
+	}
 
 	TTF_Init();
 
@@ -93,7 +109,7 @@ int main(int argc, char **argv)
 	PlayerPaddle pp(gRenderer, 20, 100);
 	pp.init();
 
-	AiPaddle ai(gRenderer, SCREEN_WIDTH-50, 100);
+	AiPaddle ai(gRenderer, SCREEN_WIDTH-20, 100);
 	ai.init();
 
 	Ball ball(gRenderer, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
@@ -114,3 +130,16 @@ int main(int argc, char **argv)
 
 	return 0;
 }
+
+void print_init_flags(int flags)
+{
+#define PFLAG(a) if(flags&MIX_INIT_##a) printf(#a " ")
+	PFLAG(FLAC);
+	PFLAG(MOD);
+	PFLAG(MP3);
+	PFLAG(OGG);
+	if(!flags)
+		printf("None");
+	printf("\n");
+}
+

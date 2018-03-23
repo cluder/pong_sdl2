@@ -6,16 +6,31 @@
  */
 
 #include "Ball.h"
+#include "SDL2/SDL_mixer.h"
+#include <iostream>
+
+using namespace std;
 
 Ball::Ball(SDL_Renderer *renderer, int x, int y) {
 	this->pRenderer = renderer;
 	this->x = x;
 	this->y = y;
+	plop = NULL;
 }
 
-// loads the ball texture
 void Ball::init() {
-	tex = IMG_LoadTexture(pRenderer, "img/ball.png");
+
+	// loads ball texture
+	tex = IMG_LoadTexture(pRenderer, "res/ball.png");
+	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
+
+	// load hit sound
+	plop = Mix_LoadMUS("res/pong.ogg");
+	if (plop == NULL) {
+		cerr << "unable to load sound: " << SDL_GetError() << endl;
+		exit(-1);
+	}
+
 }
 
 // move ball according to x/y velocity
@@ -26,7 +41,6 @@ void Ball::update(Uint32 tpf) {
 
 // draws the ball at position x,y
 void Ball::render() {
-	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
 	SDL_Rect dstRect;
 	dstRect.x = x;
 	dstRect.y = y;
@@ -46,8 +60,26 @@ SDL_Rect Ball::getRect() {
 	return ballRect;
 }
 
+void Ball::hit() {
+
+	// increase x velocity
+	if (this->xVelocity < this->maxSpeed) {
+		this->xVelocity += 50;
+	}
+
+	// play sound
+	int err = Mix_PlayMusic(plop, 0);
+	if (err  == -1) {
+		cerr << "could not play sound" << SDL_GetError() << endl;
+		exit(-1);
+	}
+
+}
+
 // free the texture
 Ball::~Ball() {
 	SDL_DestroyTexture(tex);
+
+	Mix_FreeMusic(plop);
 }
 

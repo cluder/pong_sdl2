@@ -33,7 +33,7 @@ private:
 	SDL_Texture* tex = NULL;
 	SDL_Renderer* pRenderer = NULL;
 
-	float ySpeed = 320;
+	float ySpeed = 290;
 	float yVelocity = ySpeed;
 };
 

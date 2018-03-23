@@ -7,14 +7,12 @@
 
 #include "GameManager.h"
 
-SDL_Rect fpsRect;
-
 void GameManager::init(int screenW, int screenH) {
 	this->screenW = screenW;
 	this->screenH = screenH;
 
-	this->scoreFont = TTF_OpenFont("img/OpenSans-Regular.ttf", 40);
-	this->fpsFont = TTF_OpenFont("img/OpenSans-Regular.ttf", 20);
+	this->scoreFont = TTF_OpenFont("res/OpenSans-Regular.ttf", 40);
+	this->fpsFont = TTF_OpenFont("res/OpenSans-Regular.ttf", 25);
 }
 
 bool GameManager::handleInput() {
@@ -83,18 +81,38 @@ void GameManager::checkCollision() {
 		// ball hit player paddle
 		// reset ball to player edge
 		// bounce
-		ball.setX(playerRect.x + playerRect.w);
-		ball.setXVelocity(ball.getSpeed());
+		ball.setX(playerRect.x + playerRect.w+1);
+		ball.setXVelocity(abs(ball.getXVelocity()));
 
 		ball.hit();
+
+		// ball center
+		int ballY = ball.getY()+ball.getTexH()/2;
+		// paddle center
+		int paddleCenter = playerRect.y + playerRect.h/2;
+
+		if (ballY > paddleCenter) {
+			// hit lower region
+			cerr << " increase yvel" << endl;
+
+			ball.setYVelocity(ball.getYVelocity()+300);
+		} else {
+			cerr << " decrease y vel" << endl;
+			ball.setYVelocity(ball.getYVelocity()-300);
+		}
+
+		cerr << "xVel:" << ball.getXVelocity()
+			 << " yVel:" << ball.getYVelocity()  << endl;
+
+
 	}
 
 	if (SDL_IntersectRect(&ballRect, &aiRect, &result) == SDL_TRUE) {
 		// ball hit ai paddle
-		// reset ball to player edge
+		// reset ball to paddle edge
 		// bounce
 		ball.setX(aiRect.x - ballRect.w);
-		ball.setXVelocity(ball.getSpeed() * -1);
+		ball.setXVelocity(-ball.getXVelocity());
 
 		ball.hit();
 	}
@@ -120,13 +138,13 @@ void GameManager::checkCollision() {
 	if (ball.getY() < 0) {
 		// top hit - bounce down
 		ball.setY(0);
-		ball.setYVelocity(ball.getSpeed());
+		ball.setYVelocity(abs(ball.getYVelocity()));
 	}
 
 	if (ball.getY() + ball.getTexH() > windowSize.h) {
 		// bottom hit - bounce up
 		ball.setY(windowSize.h - ball.getTexH());
-		ball.setYVelocity(ball.getSpeed() * -1);
+		ball.setYVelocity(-ball.getYVelocity());
 	}
 }
 
@@ -148,7 +166,7 @@ void GameManager::renderScore(int score, int x, int y) {
 	// player score
 	string sPlayerScore = std::to_string(score);
 	SDL_Color scoreColor = { 255, 255, 255 };
-	SDL_Surface* tmpSurface = TTF_RenderText_Solid(scoreFont,
+	SDL_Surface* tmpSurface = TTF_RenderText_Blended(scoreFont,
 			sPlayerScore.c_str(), scoreColor);
 	SDL_Texture* playerScoreTex = SDL_CreateTextureFromSurface(pRenderer,
 			tmpSurface);
@@ -156,11 +174,12 @@ void GameManager::renderScore(int score, int x, int y) {
 	int texW;
 	int texH;
 	SDL_QueryTexture(playerScoreTex, NULL, NULL, &texW, &texH);
-	fpsRect.x = x;
-	fpsRect.y = y;
-	fpsRect.w = texW;
-	fpsRect.h = texH;
-	SDL_RenderCopy(pRenderer, playerScoreTex, NULL, &fpsRect);
+	SDL_Rect dstRect;
+	dstRect.x = x;
+	dstRect.y = y;
+	dstRect.w = texW;
+	dstRect.h = texH;
+	SDL_RenderCopy(pRenderer, playerScoreTex, NULL, &dstRect);
 }
 
 void GameManager::drawUI() {
@@ -182,7 +201,7 @@ void GameManager::drawFps() {
 	string sFps = "FPS: " +std::to_string(fps);
 
 	SDL_Color color = { 255, 255, 0 };
-	SDL_Surface* tmpSurface = TTF_RenderText_Solid(fpsFont,
+	SDL_Surface* tmpSurface = TTF_RenderText_Blended(fpsFont,
 			sFps.c_str(), color);
 	SDL_Texture* tex = SDL_CreateTextureFromSurface(pRenderer,
 			tmpSurface);
@@ -190,6 +209,7 @@ void GameManager::drawFps() {
 	int texH;
 	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
 	SDL_FreeSurface(tmpSurface);
+	SDL_Rect fpsRect;
 	fpsRect.x = 20;
 	fpsRect.y = 20;
 	fpsRect.w = texW;

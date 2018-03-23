@@ -26,10 +26,16 @@ void AiPaddle::update(Uint32 tpf, Ball &ball) {
 }
 
 void AiPaddle::init() {
-	tex = IMG_LoadTexture(pRenderer, "img/paddle.bmp");
+	tex = IMG_LoadTexture(pRenderer, "res/paddle.bmp");
+	// query and save texture size
+	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
 
 	// tint color red
 	SDL_SetTextureColorMod(tex, 0xF0, 0x00,0x00);
+
+	// we want to draw the paddle at location 'x'
+	// adjust x to be in the center of the paddle
+	x = x-texW/2;
 }
 
 void AiPaddle::render() {

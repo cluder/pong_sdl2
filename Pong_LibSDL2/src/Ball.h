@@ -12,6 +12,7 @@
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
+#include "SDL2/SDL_mixer.h"
 
 class Ball {
 public:
@@ -22,8 +23,8 @@ public:
 	virtual ~Ball();
 
 	// hit a paddle - increase speed
-	void hit() { if (speed < maxSpeed) speed *= 1.2;};
-	void resetSpeed() {speed = initialSpeed;}
+	void hit();
+	void resetSpeed() {yVelocity = xVelocity = initialSpeed;}
 	SDL_Rect getRect();
 
 	int getX() {return x;}
@@ -58,10 +59,13 @@ private:
 	// movement speed
 	float initialSpeed = 300;
 	float speed = initialSpeed;
-	float maxSpeed = 12;
+	float maxSpeed = 800;
 
 	float xVelocity = speed;
 	float yVelocity = speed;
+
+	// sound
+	Mix_Music* plop;
 
 };
 
