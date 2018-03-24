@@ -12,13 +12,6 @@
 
 using namespace std;
 
-Ball::Ball(SDL_Renderer *renderer, int x, int y) {
-	this->pRenderer = renderer;
-	this->x = x;
-	this->y = y;
-	plop = NULL;
-}
-
 void Ball::init() {
 
 	// loads ball texture

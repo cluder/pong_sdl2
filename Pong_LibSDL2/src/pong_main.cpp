@@ -9,11 +9,13 @@
 
 using namespace std;
 
-int GameManager::screenH = 300;
-int GameManager::screenW = 500;
+int GameManager::screenH = 500;
+int GameManager::screenW = 700;
 
 static int playerSpeed = 300;
 static int aiSpeed = 500;
+static int initialBallXSpeed = 300;
+static int initialBallYSpeed = 200;
 
 SDL_Renderer* gRenderer = NULL;
 SDL_Texture *gBall;
@@ -124,7 +126,7 @@ int main(int argc, char **argv)
 			GameManager::screenW/2);
 	aiRight.init();
 
-	Ball ball(gRenderer, GameManager::screenW/2, GameManager::screenH/2);
+	Ball ball(gRenderer, GameManager::screenW/2, GameManager::screenH/2, initialBallXSpeed, initialBallYSpeed);
 	ball.init();
 
 	GameManager manager(gRenderer, ball, pp, aiLeft, aiRight);

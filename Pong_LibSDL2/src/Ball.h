@@ -18,7 +18,11 @@ using namespace std;
 
 class Ball {
 public:
-	Ball(SDL_Renderer* gRenderer, int y, int x);
+	Ball(SDL_Renderer* gRenderer, int x, int y, float initXSpeed, float initYSpeed)
+		:pRenderer(gRenderer), x(x), y(y),
+		 initialXSpeed(initXSpeed), initialYSpeed(initYSpeed)
+		{};
+
 	void init();
 	void render();
 	void update(Uint32 tpf);
@@ -26,7 +30,7 @@ public:
 
 	// hit a paddle - increase speed
 	void hit();
-	void resetSpeed() {xVelocity = initialSpeed; yVelocity = initialYVelocity;}
+	void resetSpeed() {xVelocity = initialXSpeed; yVelocity = initialYSpeed;}
 	SDL_Rect getRect();
 
 	float getCenterY() {return this->y + this->texH/2 ;}
@@ -62,17 +66,17 @@ private:
 	int texH = 0;
 
 	// movement speed
-	float initialSpeed = 200;
-	float initialYVelocity = 100;
+	float initialXSpeed = 200;
+	float initialYSpeed = 100;
 
-	float speed = initialSpeed;
+	float speed = initialXSpeed;
 	float maxSpeed = 500;
 
 	float xVelocity = speed;
-	float yVelocity = initialYVelocity;
+	float yVelocity = initialYSpeed;
 
 	// sound
-	Mix_Music* plop;
+	Mix_Music* plop = NULL;
 
 };
 
