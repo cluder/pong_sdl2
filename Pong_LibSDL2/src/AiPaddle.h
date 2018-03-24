@@ -17,11 +17,13 @@ using namespace std;
 class AiPaddle {
 public:
 	AiPaddle(SDL_Renderer* renderer, float x, float y, float speed)
-		: renderer(renderer), x(x), y(y), speed(speed) {};
+		: renderer(renderer), x(x), y(y), initialX(x), initialY(y), speed(speed) {};
 
 	void init();
 	void render();
 	void update(Uint32 tpf, Ball &ball);
+
+	void resetPos() {x = initialX;y = initialY -texH/2; };
 
 	SDL_Rect getRect();
 
@@ -31,6 +33,8 @@ private:
 	SDL_Renderer* renderer = NULL;
 	float x;
 	float y;
+	float initialX;
+	float initialY;
 	float speed;
 	int texW = 0;
 	int texH = 0;

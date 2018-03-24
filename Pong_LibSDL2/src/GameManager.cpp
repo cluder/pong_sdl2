@@ -78,6 +78,7 @@ void GameManager::checkCollision() {
 	SDL_Rect result;
 
 	if (SDL_IntersectRect(&playerRect,&ballRect, &result) == SDL_TRUE) {
+
 		// ball hit player paddle
 		// reset ball to player edge
 		// bounce
@@ -87,25 +88,28 @@ void GameManager::checkCollision() {
 		ball.hit();
 
 		// ball center
-		int ballY = ball.getY()+ball.getTexH()/2;
+		int ballY = ball.getCenterY();
+
 		// paddle center
 		int paddleCenter = playerRect.y + playerRect.h/2;
 
+		// distance from center
+		float dist = abs(ballY - paddleCenter);
+
+		float fact = 1.0f/playerRect.h*dist;
+
+		float yVelChange = 500.0f * fact;
 		if (ballY > paddleCenter) {
 			// hit lower region
-			cerr << " increase yvel" << endl;
-
-			ball.setYVelocity(ball.getYVelocity()+300);
 		} else {
-			cerr << " decrease y vel" << endl;
-			ball.setYVelocity(ball.getYVelocity()-300);
+			yVelChange *= -1;
 		}
 
-		cerr << "xVel:" << ball.getXVelocity()
-			 << " yVel:" << ball.getYVelocity()  << endl;
+		ball.setYVelocity(ball.getYVelocity() + yVelChange);
 	}
 
 	if (SDL_IntersectRect(&ballRect, &aiRect, &result) == SDL_TRUE) {
+
 		// ball hit ai paddle
 		// reset ball to paddle edge
 		// bounce
@@ -135,12 +139,14 @@ void GameManager::checkCollision() {
 
 	if (ball.getY() < 0) {
 		// top hit - bounce down
+		cerr << "top hit, yVel:" << ball.getYVelocity() << endl;
 		ball.setY(0);
 		ball.setYVelocity(abs(ball.getYVelocity()));
 	}
 
 	if (ball.getY() + ball.getTexH() > windowSize.h) {
 		// bottom hit - bounce up
+		cerr << "bottom hit, yVel:" << ball.getYVelocity() << endl;
 		ball.setY(windowSize.h - ball.getTexH());
 		ball.setYVelocity(-ball.getYVelocity());
 	}
@@ -157,7 +163,10 @@ void GameManager::restartRound() {
 	ball.setX(windowSize.w/2);
 	ball.setY(windowSize.h/2);
 
-	ball.setXVelocity(ball.getXVelocity() * -1);
+//	ball.setXVelocity(ball.getXVelocity() * -1);
+
+	player.resetPos();
+	ai.resetPos();
 }
 
 void GameManager::renderScore(int score, int x, int y) {

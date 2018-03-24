@@ -13,6 +13,7 @@ int GameManager::screenW = 800;
 int GameManager::screenH = 500;
 
 static int playerSpeed = 300;
+static int aiSpeed = 300;
 
 SDL_Renderer* gRenderer = NULL;
 SDL_Texture *gBall;
@@ -37,7 +38,7 @@ SDL_Window* initSDL(SDL_Window* window)
 	}
 
 	gRenderer = SDL_CreateRenderer(window, -1,
-			SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+			SDL_RENDERER_ACCELERATED
 			//| SDL_RENDERER_PRESENTVSYNC
 			);
 	if (gRenderer == NULL) {
@@ -110,10 +111,10 @@ int main(int argc, char **argv)
 	window = initSDL(window);
 
 	// create entities
-	PlayerPaddle pp(gRenderer, 20, 100, playerSpeed);
+	PlayerPaddle pp(gRenderer, 20, GameManager::screenH/2, playerSpeed);
 	pp.init();
 
-	AiPaddle ai(gRenderer, GameManager::screenW-20, 100, 250);
+	AiPaddle ai(gRenderer, GameManager::screenW-20, GameManager::screenH/2, aiSpeed);
 	ai.init();
 
 	Ball ball(gRenderer, GameManager::screenW/2, GameManager::screenH/2);

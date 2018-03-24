@@ -52,7 +52,8 @@ void AiPaddle::init() {
 
 	// we want to draw the paddle at location 'x'
 	// adjust x to be in the center of the paddle
-	x = x-texW/2;
+	x = x - texW/2;
+	y = y - texH/2;
 }
 
 void AiPaddle::render() {

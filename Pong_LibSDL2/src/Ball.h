@@ -14,6 +14,8 @@
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_mixer.h"
 
+using namespace std;
+
 class Ball {
 public:
 	Ball(SDL_Renderer* gRenderer, int y, int x);
@@ -24,7 +26,7 @@ public:
 
 	// hit a paddle - increase speed
 	void hit();
-	void resetSpeed() {yVelocity = xVelocity = initialSpeed;}
+	void resetSpeed() {xVelocity = initialSpeed; yVelocity = 0;}
 	SDL_Rect getRect();
 
 	float getCenterY() {return this->y + this->texH/2 ;}
@@ -53,18 +55,18 @@ public:
 private:
 	SDL_Renderer *pRenderer = NULL;
 	SDL_Texture *tex = NULL;
-	int x;
-	int y;
+	float x;
+	float y;
 	int texW = 0;
 	int texH = 0;
 
 	// movement speed
 	float initialSpeed = 300;
 	float speed = initialSpeed;
-	float maxSpeed = 800;
+	float maxSpeed = 500;
 
 	float xVelocity = speed;
-	float yVelocity = speed;
+	float yVelocity = 0;
 
 	// sound
 	Mix_Music* plop;

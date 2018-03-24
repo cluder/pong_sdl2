@@ -16,7 +16,8 @@ void PlayerPaddle::init() {
 
 	// we want to draw the paddle at location 'x'
 	// adjust x to be in the center of the paddle
-	x = x-texW/2;
+	x -= texW/2;
+	y -= texH/2;
 }
 
 void PlayerPaddle::render() {
@@ -49,7 +50,7 @@ void PlayerPaddle::handleEvent(SDL_Event &e) {
 }
 
 void PlayerPaddle::update(Uint32 tpf) {
-	printPos("start: ");
+	//	printPos("start: ");
 
 	if (moveUp && moveDown) {
 		return;

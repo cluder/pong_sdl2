@@ -17,13 +17,14 @@ using namespace std;
 class PlayerPaddle {
 public:
 	PlayerPaddle(SDL_Renderer* renderer, float x, float y, float speed)
-		: pRenderer(renderer), x(x), y(y), speed(speed)  {};
+		: pRenderer(renderer), x(x), y(y), initialX(x), initialY(y), speed(speed)  {};
 	void init();
 	void handleEvent(SDL_Event &e);
 	void render();
 	void update(Uint32 tpf);
 	virtual ~PlayerPaddle();
 
+	void resetPos() {x = initialX; y = initialY -texH/2; };
 	SDL_Rect getRect();
 	void printPos(string str = "") { cerr << str << "pos:" << y << " - " << y+texH << endl;};
 
@@ -36,6 +37,8 @@ private:
 	SDL_Renderer* pRenderer = NULL;
 	float x;
 	float y;
+	float initialX;
+	float initialY;
 	float speed;
 
 	int texW = 0;

@@ -35,8 +35,13 @@ void Ball::init() {
 
 // move ball according to x/y velocity
 void Ball::update(Uint32 tpf) {
-	x += xVelocity * (tpf/1000.f);
-	y += yVelocity * (tpf/1000.f);
+	if (tpf == 0) {
+		return;
+	}
+
+	float tpf1000 = (tpf/1000.f);
+	x += xVelocity * tpf1000;
+	y += yVelocity * tpf1000;
 }
 
 // draws the ball at position x,y
