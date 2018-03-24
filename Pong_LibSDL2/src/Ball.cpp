@@ -8,6 +8,7 @@
 #include "Ball.h"
 #include "SDL2/SDL_mixer.h"
 #include <iostream>
+#include "GameManager.h"
 
 using namespace std;
 
@@ -38,6 +39,10 @@ void Ball::update(Uint32 tpf) {
 	if (tpf == 0) {
 		return;
 	}
+
+	// limit y velocity to max window height
+	yVelocity = min(yVelocity, (float)GameManager::screenH);
+	xVelocity = min(xVelocity, (float)GameManager::screenW);
 
 	float tpf1000 = (tpf/1000.f);
 	x += xVelocity * tpf1000;

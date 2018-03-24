@@ -7,6 +7,12 @@
 
 #include "GameManager.h"
 
+GameManager::~GameManager() {
+	// segfaults ? :(
+//	TTF_CloseFont(this->fpsFont);
+//	TTF_CloseFont(this->scoreFont);
+}
+
 void GameManager::init(int screenW, int screenH) {
 	this->screenW = screenW;
 	this->screenH = screenH;
@@ -211,7 +217,6 @@ void GameManager::renderScore(int score, int x, int y) {
 			sPlayerScore.c_str(), scoreColor);
 	SDL_Texture* playerScoreTex = SDL_CreateTextureFromSurface(pRenderer,
 			tmpSurface);
-	SDL_FreeSurface(tmpSurface);
 	int texW;
 	int texH;
 	SDL_QueryTexture(playerScoreTex, NULL, NULL, &texW, &texH);
@@ -221,6 +226,9 @@ void GameManager::renderScore(int score, int x, int y) {
 	dstRect.w = texW;
 	dstRect.h = texH;
 	SDL_RenderCopy(pRenderer, playerScoreTex, NULL, &dstRect);
+
+	SDL_FreeSurface(tmpSurface);
+	SDL_DestroyTexture(playerScoreTex);
 }
 
 void GameManager::drawUI() {
@@ -249,7 +257,6 @@ void GameManager::drawFps() {
 	int texW;
 	int texH;
 	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
-	SDL_FreeSurface(tmpSurface);
 	SDL_Rect fpsRect;
 	fpsRect.x = 20;
 	fpsRect.y = 20;
@@ -258,8 +265,9 @@ void GameManager::drawFps() {
 
 	SDL_RenderCopy(pRenderer, tex, NULL, &fpsRect);
 
+	SDL_FreeSurface(tmpSurface);
+	SDL_DestroyTexture(tex);
+
 }
 
-GameManager::~GameManager() {
 
-}
