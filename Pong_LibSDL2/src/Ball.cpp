@@ -31,7 +31,6 @@ void Ball::init() {
 		cerr << "unable to load sound: " << SDL_GetError() << endl;
 		exit(-1);
 	}
-
 }
 
 // move ball according to x/y velocity
