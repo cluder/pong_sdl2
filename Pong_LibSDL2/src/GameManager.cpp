@@ -185,7 +185,8 @@ void GameManager::checkCollision() {
 		// bottom hit - bounce up
 		cerr << "bottom hit, yVel:" << ball.getYVelocity() << endl;
 		ball.setY(windowSize.h - ball.getTexH());
-		ball.setYVelocity(-ball.getYVelocity());
+
+		ball.setYVelocity(abs(ball.getYVelocity()) * -1);
 	}
 }
 
@@ -197,8 +198,8 @@ void GameManager::restartRound() {
 	// reset ball position
 	ball.resetSpeed();
 
-	int randBool = rand() %2;
-	ball.setYVelocity(ball.getYVelocity() * randBool==0?-1:1);
+//	int randBool = rand() %2;
+//	ball.setYVelocity(ball.getYVelocity() * randBool==0?-1:1);
 
 	ball.setX(windowSize.w/2 - ball.getTexW()/2);
 	ball.setY(windowSize.h/2);

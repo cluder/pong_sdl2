@@ -70,7 +70,7 @@ private:
 	float initialYSpeed = 100;
 
 	float speed = initialXSpeed;
-	float maxSpeed = 500;
+	float maxSpeed = 400;
 
 	float xVelocity = speed;
 	float yVelocity = initialYSpeed;

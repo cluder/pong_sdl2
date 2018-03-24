@@ -126,7 +126,8 @@ int main(int argc, char **argv)
 			GameManager::screenW/2);
 	aiRight.init();
 
-	Ball ball(gRenderer, GameManager::screenW/2, GameManager::screenH/2, initialBallXSpeed, initialBallYSpeed);
+	Ball ball(gRenderer, GameManager::screenW/2, GameManager::screenH/2,
+				initialBallXSpeed, initialBallYSpeed);
 	ball.init();
 
 	GameManager manager(gRenderer, ball, pp, aiLeft, aiRight);
