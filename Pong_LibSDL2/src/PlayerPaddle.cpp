@@ -6,13 +6,7 @@
  */
 
 #include "PlayerPaddle.h"
-
-
-PlayerPaddle::PlayerPaddle(SDL_Renderer* renderer, int x, int y) {
-	this->x = x;
-	this->y = y;
-	this->pRenderer = renderer;
-}
+#include "GameManager.h"
 
 void PlayerPaddle::init() {
 	tex = IMG_LoadTexture(pRenderer, "res/paddle.bmp");
@@ -26,7 +20,6 @@ void PlayerPaddle::init() {
 }
 
 void PlayerPaddle::render() {
-
 
 	SDL_Rect dstRect;
 	dstRect.x = x;
@@ -53,10 +46,10 @@ void PlayerPaddle::handleEvent(SDL_Event &e) {
 			moveDown = false;
 		}
 	}
-
 }
 
 void PlayerPaddle::update(Uint32 tpf) {
+	printPos("start: ");
 
 	if (moveUp && moveDown) {
 		return;
@@ -64,23 +57,21 @@ void PlayerPaddle::update(Uint32 tpf) {
 
 	float velocity = 0;
 	if (moveDown) {
-		velocity = paddleSpeed;
+		velocity = speed;
 	}
 
 	if (moveUp) {
-		velocity = paddleSpeed*-1;
+		velocity = speed * -1.0f;
 	}
 
 	y += velocity * (tpf/1000.f);
 
-	SDL_Rect windowSize;
-	SDL_RenderGetViewport(pRenderer, &windowSize);
-
 	if (y < 0) {
 		y = 0;
 	}
-	if (y + this->texH > windowSize.h) {
-		y = windowSize.h - this->texH;
+
+	if (y + this->texH > GameManager::screenH) {
+		y = GameManager::screenH - this->texH;
 	}
 }
 

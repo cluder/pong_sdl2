@@ -18,6 +18,9 @@
 
 class GameManager {
 public:
+	static int screenW;
+	static int screenH;
+
 	GameManager(SDL_Renderer *pRenderer, Ball &b, PlayerPaddle &player, AiPaddle &ai)
 		: pRenderer(pRenderer), ball(b), player(player), ai(ai) {};
 
@@ -46,8 +49,6 @@ private:
 	int playerScore = 0;
 	int aiScore = 0;
 
-	int screenW = 0;
-	int screenH = 0;
 
 	int fps = 0;
 	Uint32 lastFpsUpdate = 0;

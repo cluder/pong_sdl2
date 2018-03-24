@@ -16,7 +16,9 @@ using namespace std;
 
 class AiPaddle {
 public:
-	AiPaddle(SDL_Renderer* gRenderer, int x, int y);
+	AiPaddle(SDL_Renderer* renderer, float x, float y, float speed)
+		: renderer(renderer), x(x), y(y), speed(speed) {};
+
 	void init();
 	void render();
 	void update(Uint32 tpf, Ball &ball);
@@ -26,15 +28,15 @@ public:
 	virtual ~AiPaddle();
 
 private:
+	SDL_Renderer* renderer = NULL;
+	float x;
+	float y;
+	float speed;
 	int texW = 0;
 	int texH = 0;
-	int x = 0;
-	int y = 0;
 	SDL_Texture* tex = NULL;
-	SDL_Renderer* pRenderer = NULL;
 
-	float ySpeed = 290;
-	float yVelocity = ySpeed;
+	float yVelocity = speed;
 };
 
 #endif /* SRC_AIPADDLE_H_ */

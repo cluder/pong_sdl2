@@ -9,15 +9,17 @@
 
 using namespace std;
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 500;
+int GameManager::screenW = 800;
+int GameManager::screenH = 500;
+
+static int playerSpeed = 300;
 
 SDL_Renderer* gRenderer = NULL;
 SDL_Texture *gBall;
 
 void print_init_flags(int flags);
 
-// ini SDL
+// init SDL
 SDL_Window* initSDL(SDL_Window* window)
 {
 	// Initialize SDL
@@ -28,14 +30,14 @@ SDL_Window* initSDL(SDL_Window* window)
 
 	// Create window
 	window = SDL_CreateWindow("SDL Pong", SDL_WINDOWPOS_UNDEFINED,
-	SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	SDL_WINDOWPOS_UNDEFINED, GameManager::screenW, GameManager::screenH, SDL_WINDOW_SHOWN);
 	if (window == NULL) {
 		printf("Window could not be created! SDL_Error: %s\n",
 				SDL_GetError());
 	}
 
 	gRenderer = SDL_CreateRenderer(window, -1,
-			SDL_RENDERER_ACCELERATED
+			SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
 			//| SDL_RENDERER_PRESENTVSYNC
 			);
 	if (gRenderer == NULL) {
@@ -89,9 +91,11 @@ void mainLoop(GameManager &manager)
 		// render scene
 		manager.render();
 
-		if (tpf < 10) {
+		while (tpf < 10) {
 			// limit to max 100 fps
 			SDL_Delay(10);
+			current = SDL_GetTicks();
+			tpf = current - lastFrame;
 		}
 
 	} while (!quit);
@@ -106,17 +110,17 @@ int main(int argc, char **argv)
 	window = initSDL(window);
 
 	// create entities
-	PlayerPaddle pp(gRenderer, 20, 100);
+	PlayerPaddle pp(gRenderer, 20, 100, playerSpeed);
 	pp.init();
 
-	AiPaddle ai(gRenderer, SCREEN_WIDTH-20, 100);
+	AiPaddle ai(gRenderer, GameManager::screenW-20, 100, 250);
 	ai.init();
 
-	Ball ball(gRenderer, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+	Ball ball(gRenderer, GameManager::screenW/2, GameManager::screenH/2);
 	ball.init();
 
 	GameManager manager(gRenderer, ball, pp, ai);
-	manager.init(SCREEN_WIDTH, SCREEN_HEIGHT);
+	manager.init(GameManager::screenW, GameManager::screenH);
 
 	// main loop
 	mainLoop(manager);

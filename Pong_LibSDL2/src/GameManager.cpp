@@ -103,8 +103,6 @@ void GameManager::checkCollision() {
 
 		cerr << "xVel:" << ball.getXVelocity()
 			 << " yVel:" << ball.getYVelocity()  << endl;
-
-
 	}
 
 	if (SDL_IntersectRect(&ballRect, &aiRect, &result) == SDL_TRUE) {

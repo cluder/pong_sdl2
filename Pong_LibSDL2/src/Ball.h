@@ -27,6 +27,8 @@ public:
 	void resetSpeed() {yVelocity = xVelocity = initialSpeed;}
 	SDL_Rect getRect();
 
+	float getCenterY() {return this->y + this->texH/2 ;}
+
 	int getX() {return x;}
 	void setX(int x) {this->x = x;}
 

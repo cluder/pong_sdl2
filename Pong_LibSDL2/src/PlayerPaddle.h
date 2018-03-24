@@ -16,7 +16,8 @@ using namespace std;
 
 class PlayerPaddle {
 public:
-	PlayerPaddle(SDL_Renderer* gRenderer, int x, int y);
+	PlayerPaddle(SDL_Renderer* renderer, float x, float y, float speed)
+		: pRenderer(renderer), x(x), y(y), speed(speed)  {};
 	void init();
 	void handleEvent(SDL_Event &e);
 	void render();
@@ -24,6 +25,7 @@ public:
 	virtual ~PlayerPaddle();
 
 	SDL_Rect getRect();
+	void printPos(string str = "") { cerr << str << "pos:" << y << " - " << y+texH << endl;};
 
 	int getX() {return x;}
 	int getY() {return y;}
@@ -31,14 +33,15 @@ public:
 	int getTexW() {return texW;}
 	int getTexH() {return texH;}
 private:
+	SDL_Renderer* pRenderer = NULL;
+	float x;
+	float y;
+	float speed;
+
 	int texW = 0;
 	int texH = 0;
-	int x = 0;
-	int y = 0;
 	SDL_Texture* tex = NULL;
-	SDL_Renderer* pRenderer = NULL;
 
-	float paddleSpeed = 400;
 	bool moveUp = false;
 	bool moveDown = false;
 };

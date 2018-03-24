@@ -6,27 +6,44 @@
  */
 
 #include "AiPaddle.h"
-
-AiPaddle::AiPaddle(SDL_Renderer* renderer, int x, int y) {
-	this->x = x;
-	this->y = y;
-	this->pRenderer = renderer;
-}
+#include "GameManager.h"
 
 void AiPaddle::update(Uint32 tpf, Ball &ball) {
 
-	if (this->y < ball.getY()) {
-		this->yVelocity = this->ySpeed;
-	} else {
-		this->yVelocity = this->ySpeed * -1;
+	// paddle mid
+	int padCenterY = this->y + this->texH/2;
+
+	// absolute distance to ball
+	float absDistance = abs(padCenterY - ball.getCenterY());
+
+	// if the distance is less than the paddle height, we reduce the speed accordingly
+	float fact = 1.0f / this->texH * absDistance;
+	if (fact > 1) {
+		fact = 1;
 	}
 
-	this->y += yVelocity * ((float)tpf/(float)1000);
+	// calculate velocity speed and direction
+	this->yVelocity = this->speed * fact;
+
+	if (padCenterY > ball.getCenterY()) {
+		// paddle lower than ball - move up
+		this->yVelocity *= -1;
+	}
+
+	this->y += yVelocity * ((float)tpf/1000.0f);
+
+	// limit paddle movement
+	if (this->y + this->texH > GameManager::screenH) {
+		this->y = GameManager::screenH - this->texH;
+	}
+	if (this->y + this->texH < 0) {
+		this->y = 0;
+	}
 
 }
 
 void AiPaddle::init() {
-	tex = IMG_LoadTexture(pRenderer, "res/paddle.bmp");
+	tex = IMG_LoadTexture(renderer, "res/paddle.bmp");
 	// query and save texture size
 	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
 
@@ -48,7 +65,7 @@ void AiPaddle::render() {
 	dstRect.h = texH;
 	dstRect.w = texW;
 
-	SDL_RenderCopy(pRenderer, tex, NULL, &dstRect);
+	SDL_RenderCopy(renderer, tex, NULL, &dstRect);
 }
 
 SDL_Rect AiPaddle::getRect() {
