@@ -8,29 +8,80 @@
 #include "AiPaddle.h"
 #include "GameManager.h"
 
-void AiPaddle::update(Uint32 tpf, Ball &ball) {
+bool AiPaddle::ballMovesAway(Ball &ball) {
+	bool ballMovingAway = false;
+	if (isLeft) {
+		if (ball.getXVelocity() > 0){
+			ballMovingAway = true;
+		} else {
+			ballMovingAway = false;
+		}
+	} else {
+		if (ball.getXVelocity() < 0){
+			ballMovingAway = true;
+		} else {
+			ballMovingAway = false;
+		}
+	}
 
-	// paddle mid
-	int padCenterY = this->y + this->texH/2;
+	return ballMovingAway;
+}
 
-	// absolute distance to ball
-	float absDistance = abs(padCenterY - ball.getCenterY());
+void AiPaddle::moveToCenter(Uint32 tpf) {
+	int centerH = GameManager::screenH/2;
 
-	// if the distance is less than the paddle height, we reduce the speed accordingly
-	float fact = 1.0f / this->texH * absDistance;
+	float distance = abs(this->y - centerH);
+
+	// slow down if we are nearer than 100 px
+	float fact = 1.0f / 100 * distance;
 	if (fact > 1) {
 		fact = 1;
 	}
 
-	// calculate velocity speed and direction
 	this->yVelocity = this->speed * fact;
 
+	if (this->y > centerH) {
+		this->yVelocity *= -1;
+	}
+
+	this->y += yVelocity * ((float) (tpf) / 1000.0f);
+}
+
+void AiPaddle::moveToBall(float absYDistance, int padCenterY, Uint32 tpf,
+		Ball& ball) {
+	// if the distance is less than the paddle height, we reduce the speed accordingly
+	float fact = 1.0f / this->texH * absYDistance;
+	if (fact > 1) {
+		fact = 1;
+	}
+	// calculate velocity speed and direction
+	this->yVelocity = this->speed * fact;
 	if (padCenterY > ball.getCenterY()) {
 		// paddle lower than ball - move up
 		this->yVelocity *= -1;
 	}
+	this->y += yVelocity * ((float) (tpf) / 1000.0f);
 
-	this->y += yVelocity * ((float)tpf/1000.0f);
+}
+
+void AiPaddle::update(Uint32 tpf, Ball &ball) {
+
+	// paddle mid
+	int padCenterY = this->y + this->texH/2;
+	int padCenterX = this->x + this->texW/2;
+
+	// absolute distance to ball
+	float absYDistance = abs(padCenterY - ball.getCenterY());
+	float absXDistance = abs(padCenterX - ball.getCenterX());
+
+
+	if (absXDistance > sightRange || ballMovesAway(ball)) {
+		// can't see ball
+		moveToCenter(tpf);
+	} else {
+		// if the distance is less than the paddle height, we reduce the speed accordingly
+		moveToBall(absYDistance, padCenterY, tpf, ball);
+	}
 
 	// limit paddle movement
 	if (this->y + this->texH > GameManager::screenH) {
@@ -39,7 +90,6 @@ void AiPaddle::update(Uint32 tpf, Ball &ball) {
 	if (this->y + this->texH < 0) {
 		this->y = 0;
 	}
-
 }
 
 void AiPaddle::init() {
@@ -48,10 +98,18 @@ void AiPaddle::init() {
 	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
 
 	// tint color red
-	SDL_SetTextureColorMod(tex, 0xF0, 0x00,0x00);
+	if (isLeft) {
+		SDL_SetTextureColorMod(tex, 0xF0, 0x00,0x00);
+	} else {
+		SDL_SetTextureColorMod(tex, 0x00, 0x00, 0xF0);
+	}
 
 	// we want to draw the paddle at location 'x'
 	// adjust x to be in the center of the paddle
+	float xOffset = texW/2;
+	if (this->isLeft) {
+		xOffset *=-1;
+	}
 	x = x - texW/2;
 	y = y - texH/2;
 }
@@ -83,3 +141,7 @@ AiPaddle::~AiPaddle() {
 	SDL_DestroyTexture(tex);
 }
 
+void AiPaddle::resetPos() {
+	x = initialX;
+	y = initialY -texH/2;
+}

@@ -26,10 +26,11 @@ public:
 
 	// hit a paddle - increase speed
 	void hit();
-	void resetSpeed() {xVelocity = initialSpeed; yVelocity = 0;}
+	void resetSpeed() {xVelocity = initialSpeed; yVelocity = initialYVelocity;}
 	SDL_Rect getRect();
 
 	float getCenterY() {return this->y + this->texH/2 ;}
+	float getCenterX() {return this->x + this->texW/2 ;}
 
 	int getX() {return x;}
 	void setX(int x) {this->x = x;}
@@ -50,7 +51,7 @@ public:
 	void setXVelocity(float velocity) {xVelocity = velocity;}
 
 	float getYVelocity() const {return yVelocity;}
-	void setYVelocity(float velocity) {yVelocity = velocity;}
+	void setYVelocity(float velocity) {if (yVelocity < maxSpeed) yVelocity = velocity;}
 
 private:
 	SDL_Renderer *pRenderer = NULL;
@@ -61,12 +62,14 @@ private:
 	int texH = 0;
 
 	// movement speed
-	float initialSpeed = 300;
+	float initialSpeed = 200;
+	float initialYVelocity = 100;
+
 	float speed = initialSpeed;
 	float maxSpeed = 500;
 
 	float xVelocity = speed;
-	float yVelocity = 0;
+	float yVelocity = initialYVelocity;
 
 	// sound
 	Mix_Music* plop;

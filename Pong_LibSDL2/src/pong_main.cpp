@@ -9,11 +9,11 @@
 
 using namespace std;
 
-int GameManager::screenW = 800;
-int GameManager::screenH = 500;
+int GameManager::screenH = 300;
+int GameManager::screenW = 500;
 
 static int playerSpeed = 300;
-static int aiSpeed = 300;
+static int aiSpeed = 500;
 
 SDL_Renderer* gRenderer = NULL;
 SDL_Texture *gBall;
@@ -39,7 +39,7 @@ SDL_Window* initSDL(SDL_Window* window)
 
 	gRenderer = SDL_CreateRenderer(window, -1,
 			SDL_RENDERER_ACCELERATED
-			//| SDL_RENDERER_PRESENTVSYNC
+			| SDL_RENDERER_PRESENTVSYNC
 			);
 	if (gRenderer == NULL) {
 		cerr << "error creating renderer" << endl;
@@ -113,14 +113,21 @@ int main(int argc, char **argv)
 	// create entities
 	PlayerPaddle pp(gRenderer, 20, GameManager::screenH/2, playerSpeed);
 	pp.init();
+	pp.setDisabled(true);
 
-	AiPaddle ai(gRenderer, GameManager::screenW-20, GameManager::screenH/2, aiSpeed);
-	ai.init();
+	// left ai
+	AiPaddle aiLeft(gRenderer, 20, GameManager::screenH/2, aiSpeed, true,
+			GameManager::screenW/2);
+	aiLeft.init();
+
+	AiPaddle aiRight(gRenderer, GameManager::screenW-20, GameManager::screenH/2, aiSpeed, false,
+			GameManager::screenW/2);
+	aiRight.init();
 
 	Ball ball(gRenderer, GameManager::screenW/2, GameManager::screenH/2);
 	ball.init();
 
-	GameManager manager(gRenderer, ball, pp, ai);
+	GameManager manager(gRenderer, ball, pp, aiLeft, aiRight);
 	manager.init(GameManager::screenW, GameManager::screenH);
 
 	// main loop

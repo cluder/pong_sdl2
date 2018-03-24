@@ -33,6 +33,9 @@ public:
 
 	int getTexW() {return texW;}
 	int getTexH() {return texH;}
+
+	void setDisabled(bool value) {this->disabled = value;}
+	bool isDisabled() {return disabled;}
 private:
 	SDL_Renderer* pRenderer = NULL;
 	float x;
@@ -40,6 +43,8 @@ private:
 	float initialX;
 	float initialY;
 	float speed;
+
+	bool disabled = false;
 
 	int texW = 0;
 	int texH = 0;

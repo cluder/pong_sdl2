@@ -21,8 +21,10 @@ public:
 	static int screenW;
 	static int screenH;
 
-	GameManager(SDL_Renderer *pRenderer, Ball &b, PlayerPaddle &player, AiPaddle &ai)
-		: pRenderer(pRenderer), ball(b), player(player), ai(ai) {};
+	GameManager(SDL_Renderer *pRenderer, Ball &b, PlayerPaddle &player,
+				AiPaddle &aiLeft, AiPaddle &aiRight)
+		: pRenderer(pRenderer), ball(b), player(player),
+		  aiLeft(aiLeft), aiRight(aiRight) {};
 
 	void init(int screenW, int screenH);
 
@@ -43,12 +45,14 @@ public:
 private:
 	SDL_Renderer *pRenderer;
 	Ball &ball;
+
 	PlayerPaddle &player;
-	AiPaddle &ai;
+
+	AiPaddle &aiLeft;
+	AiPaddle &aiRight;
 
 	int playerScore = 0;
 	int aiScore = 0;
-
 
 	int fps = 0;
 	Uint32 lastFpsUpdate = 0;
@@ -57,6 +61,7 @@ private:
 	TTF_Font* fpsFont = NULL;
 
 	void renderScore(int score, int x, int y);
+	float calcYVelChange(const SDL_Rect& playerRect, int ballY);
 };
 
 #endif /* SRC_GAMEMANAGER_H_ */

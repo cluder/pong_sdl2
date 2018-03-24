@@ -46,8 +46,11 @@ void GameManager::render() {
 	drawUI();
 
 	player.render();
+
 	ball.render();
-	ai.render();
+
+	aiLeft.render();
+	aiRight.render();
 
 	// update screen
 	SDL_RenderPresent(pRenderer);
@@ -57,7 +60,9 @@ void GameManager::render() {
 void GameManager::update(Uint32 tpf) {
 	player.update(tpf);
 	ball.update(tpf);
-	ai.update(tpf, ball);
+
+	aiLeft.update(tpf, ball);
+	aiRight.update(tpf, ball);
 
 	checkCollision();
 
@@ -68,17 +73,33 @@ void GameManager::update(Uint32 tpf) {
 	}
 }
 
+float GameManager::calcYVelChange(const SDL_Rect& playerRect, int ballY) {
+	// paddle center
+	int paddleCenter = playerRect.y + playerRect.h / 2;
+	// distance from center
+	float dist = abs(ballY - paddleCenter);
+	float fact = 1.0f / playerRect.h * dist;
+	float yVelChange = 150.0f * fact;
+	if (ballY > paddleCenter) {
+		// hit lower region
+	} else {
+		yVelChange *= -1;
+	}
+	return yVelChange;
+}
+
 void GameManager::checkCollision() {
 	// check paddle collision
 
 	SDL_Rect ballRect = ball.getRect();
 	SDL_Rect playerRect = player.getRect();
-	SDL_Rect aiRect = ai.getRect();
+	SDL_Rect aiLeftRect = aiLeft.getRect();
+	SDL_Rect aiRightRect = aiRight.getRect();
 
 	SDL_Rect result;
 
-	if (SDL_IntersectRect(&playerRect,&ballRect, &result) == SDL_TRUE) {
-
+	if (player.isDisabled() == false && SDL_IntersectRect(&playerRect,&ballRect, &result) == SDL_TRUE) {
+		fprintf(stderr, "player hit\n");
 		// ball hit player paddle
 		// reset ball to player edge
 		// bounce
@@ -90,31 +111,41 @@ void GameManager::checkCollision() {
 		// ball center
 		int ballY = ball.getCenterY();
 
-		// paddle center
-		int paddleCenter = playerRect.y + playerRect.h/2;
-
-		// distance from center
-		float dist = abs(ballY - paddleCenter);
-
-		float fact = 1.0f/playerRect.h*dist;
-
-		float yVelChange = 500.0f * fact;
-		if (ballY > paddleCenter) {
-			// hit lower region
-		} else {
-			yVelChange *= -1;
-		}
-
+		// calc y velocity change
+		float yVelChange = calcYVelChange(playerRect, ballY);
 		ball.setYVelocity(ball.getYVelocity() + yVelChange);
 	}
 
-	if (SDL_IntersectRect(&ballRect, &aiRect, &result) == SDL_TRUE) {
-
+	// check collision with right ai
+	if (SDL_IntersectRect(&ballRect, &aiRightRect, &result) == SDL_TRUE) {
+		//		fprintf(stderr, "rigtht ai hit\n");
 		// ball hit ai paddle
 		// reset ball to paddle edge
-		// bounce
-		ball.setX(aiRect.x - ballRect.w);
+		// bounce to the left
+		ball.setX(aiRightRect.x - ballRect.w);
 		ball.setXVelocity(-ball.getXVelocity());
+
+		// ball center
+		int ballY = ball.getCenterY();
+		float yVelChange = calcYVelChange(aiRightRect, ballY);
+		ball.setYVelocity(ball.getYVelocity()+yVelChange);
+
+		ball.hit();
+	}
+
+	// check collision with left ai
+	if (SDL_IntersectRect(&ballRect, &aiLeftRect, &result) == SDL_TRUE) {
+		//		fprintf(stderr, "left ai hit\n");
+		// ball hit ai paddle
+		// reset ball to paddle edge
+		// bounce to the right
+		ball.setX(aiLeftRect.x + aiLeftRect.w);
+		ball.setXVelocity(abs(ball.getXVelocity()));
+
+		// ball center
+		int ballY = ball.getCenterY();
+		float yVelChange = calcYVelChange(aiLeftRect, ballY);
+		ball.setYVelocity(ball.getYVelocity()+yVelChange);
 
 		ball.hit();
 	}
@@ -160,13 +191,16 @@ void GameManager::restartRound() {
 	// reset ball position
 	ball.resetSpeed();
 
-	ball.setX(windowSize.w/2);
+	int randBool = rand() %2;
+	ball.setYVelocity(ball.getYVelocity() * randBool==0?-1:1);
+
+	ball.setX(windowSize.w/2 - ball.getTexW()/2);
 	ball.setY(windowSize.h/2);
 
-//	ball.setXVelocity(ball.getXVelocity() * -1);
-
 	player.resetPos();
-	ai.resetPos();
+
+	aiLeft.resetPos();
+	aiRight.resetPos();
 }
 
 void GameManager::renderScore(int score, int x, int y) {

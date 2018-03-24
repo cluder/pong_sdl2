@@ -21,7 +21,9 @@ void PlayerPaddle::init() {
 }
 
 void PlayerPaddle::render() {
-
+	if (disabled) {
+		return;
+	}
 	SDL_Rect dstRect;
 	dstRect.x = x;
 	dstRect.y = y;
@@ -50,8 +52,9 @@ void PlayerPaddle::handleEvent(SDL_Event &e) {
 }
 
 void PlayerPaddle::update(Uint32 tpf) {
-	//	printPos("start: ");
-
+	if (disabled) {
+		return;
+	}
 	if (moveUp && moveDown) {
 		return;
 	}
