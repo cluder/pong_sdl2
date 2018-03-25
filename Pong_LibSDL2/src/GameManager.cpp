@@ -85,13 +85,16 @@ float GameManager::calcYVelChange(const SDL_Rect& playerRect, int ballY) {
 	// distance from center
 	float dist = abs(ballY - paddleCenter);
 	float fact = 1.0f / playerRect.h * dist;
-	float yVelChange = 150.0f * fact;
+	float yVelChange = 100.0f * fact;
 	if (ballY > paddleCenter) {
 		// hit lower region
 	} else {
 		yVelChange *= -1;
 	}
-	return yVelChange;
+
+	// add some random variance
+	int randYvel = (rand()%20)-10;
+	return yVelChange + randYvel;
 }
 
 void GameManager::checkCollision() {
@@ -112,19 +115,18 @@ void GameManager::checkCollision() {
 		ball.setX(playerRect.x + playerRect.w+1);
 		ball.setXVelocity(abs(ball.getXVelocity()));
 
-		ball.hit();
-
 		// ball center
 		int ballY = ball.getCenterY();
 
 		// calc y velocity change
 		float yVelChange = calcYVelChange(playerRect, ballY);
 		ball.setYVelocity(ball.getYVelocity() + yVelChange);
+
+		ball.hit();
 	}
 
 	// check collision with right ai
 	if (SDL_IntersectRect(&ballRect, &aiRightRect, &result) == SDL_TRUE) {
-		//		fprintf(stderr, "rigtht ai hit\n");
 		// ball hit ai paddle
 		// reset ball to paddle edge
 		// bounce to the left
@@ -141,7 +143,6 @@ void GameManager::checkCollision() {
 
 	// check collision with left ai
 	if (SDL_IntersectRect(&ballRect, &aiLeftRect, &result) == SDL_TRUE) {
-		//		fprintf(stderr, "left ai hit\n");
 		// ball hit ai paddle
 		// reset ball to paddle edge
 		// bounce to the right
@@ -176,33 +177,31 @@ void GameManager::checkCollision() {
 
 	if (ball.getY() < 0) {
 		// top hit - bounce down
-		cerr << "top hit, yVel:" << ball.getYVelocity() << endl;
 		ball.setY(0);
 		ball.setYVelocity(abs(ball.getYVelocity()));
 	}
 
 	if (ball.getY() + ball.getTexH() > windowSize.h) {
-		// bottom hit - bounce up
-		cerr << "bottom hit, yVel:" << ball.getYVelocity() << endl;
 		ball.setY(windowSize.h - ball.getTexH());
-
 		ball.setYVelocity(abs(ball.getYVelocity()) * -1);
 	}
 }
 
 void GameManager::restartRound() {
 
-	SDL_Rect windowSize;
-	SDL_RenderGetViewport(pRenderer, &windowSize);
-
 	// reset ball position
 	ball.resetSpeed();
 
-//	int randBool = rand() %2;
-//	ball.setYVelocity(ball.getYVelocity() * randBool==0?-1:1);
+	int randDirection = rand() %2;
 
-	ball.setX(windowSize.w/2 - ball.getTexW()/2);
-	ball.setY(windowSize.h/2);
+	// random value between -50 and 50
+	int randYVel = (rand() %100) -50;
+
+	ball.setXVelocity(ball.getXVelocity() * (randDirection == 0?-1:1));
+	ball.setYVelocity(ball.getYVelocity() + randYVel);
+
+	ball.setX(GameManager::screenW/2 - ball.getTexW()/2);
+	ball.setY(GameManager::screenH/2);
 
 	player.resetPos();
 

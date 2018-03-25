@@ -52,10 +52,30 @@ public:
 	void setSpeed(float speed) {this->speed = speed;}
 
 	float getXVelocity() const {return xVelocity;}
-	void setXVelocity(float velocity) {xVelocity = velocity;}
-
 	float getYVelocity() const {return yVelocity;}
-	void setYVelocity(float velocity) {if (yVelocity < maxSpeed) yVelocity = velocity;}
+
+	void setXVelocity(float value) {
+		if (value > this->maxSpeed) {
+			value = maxSpeed;
+		}
+
+		if (value < this->maxSpeed*-1) {
+			value = maxSpeed*-1;
+		}
+		xVelocity = value;
+	}
+
+	void setYVelocity(float value) {
+		if (value > this->maxSpeed) {
+			value = maxSpeed;
+		}
+
+		if (value < this->maxSpeed*-1) {
+			value = maxSpeed*-1;
+		}
+
+		yVelocity = value;
+	}
 
 private:
 	SDL_Renderer *pRenderer = NULL;
@@ -66,8 +86,8 @@ private:
 	int texH = 0;
 
 	// movement speed
-	float initialXSpeed = 200;
-	float initialYSpeed = 100;
+	float initialXSpeed;
+	float initialYSpeed;
 
 	float speed = initialXSpeed;
 	float maxSpeed = 400;
@@ -76,8 +96,7 @@ private:
 	float yVelocity = initialYSpeed;
 
 	// sound
-	Mix_Music* plop = NULL;
-
+	Mix_Music* paddleHit = NULL;
 };
 
 #endif /* SRC_BALL_H_ */

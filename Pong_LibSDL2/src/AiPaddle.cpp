@@ -29,6 +29,7 @@ bool AiPaddle::ballMovesAway(Ball &ball) {
 
 void AiPaddle::moveToCenter(Uint32 tpf) {
 	int centerH = GameManager::screenH/2;
+	centerH -= this->texH/2;
 
 	float distance = abs(this->y - centerH);
 
@@ -49,6 +50,7 @@ void AiPaddle::moveToCenter(Uint32 tpf) {
 
 void AiPaddle::moveToBall(float absYDistance, int padCenterY, Uint32 tpf,
 		Ball& ball) {
+
 	// if the distance is less than the paddle height, we reduce the speed accordingly
 	float fact = 1.0f / this->texH * absYDistance;
 	if (fact > 1) {
@@ -60,6 +62,7 @@ void AiPaddle::moveToBall(float absYDistance, int padCenterY, Uint32 tpf,
 		// paddle lower than ball - move up
 		this->yVelocity *= -1;
 	}
+
 	this->y += yVelocity * ((float) (tpf) / 1000.0f);
 
 }
@@ -73,7 +76,6 @@ void AiPaddle::update(Uint32 tpf, Ball &ball) {
 	// absolute distance to ball
 	float absYDistance = abs(padCenterY - ball.getCenterY());
 	float absXDistance = abs(padCenterX - ball.getCenterX());
-
 
 	if (absXDistance > sightRange || ballMovesAway(ball)) {
 		// can't see ball
@@ -93,25 +95,25 @@ void AiPaddle::update(Uint32 tpf, Ball &ball) {
 }
 
 void AiPaddle::init() {
-	tex = IMG_LoadTexture(renderer, "res/paddle.bmp");
+	tex = IMG_LoadTexture(renderer, "res/paddle_r.png");
+
 	// query and save texture size
 	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
 
 	// tint color red
 	if (isLeft) {
-		SDL_SetTextureColorMod(tex, 0xF0, 0x00,0x00);
+		SDL_SetTextureColorMod(tex, 0xF0, 0x00, 0x00);
 	} else {
 		SDL_SetTextureColorMod(tex, 0x00, 0x00, 0xF0);
 	}
 
-	// we want to draw the paddle at location 'x'
-	// adjust x to be in the center of the paddle
-	float xOffset = texW/2;
-	if (this->isLeft) {
-		xOffset *=-1;
+
+	// adjust x location for the right paddle
+	if (this->isLeft == false) {
+		x -= texW;
 	}
-	x = x - texW/2;
-	y = y - texH/2;
+
+	y -= texH/2;
 }
 
 void AiPaddle::render() {

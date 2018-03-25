@@ -10,12 +10,12 @@
 using namespace std;
 
 int GameManager::screenH = 500;
-int GameManager::screenW = 700;
+int GameManager::screenW = 800;
 
 static int playerSpeed = 300;
-static int aiSpeed = 500;
-static int initialBallXSpeed = 300;
-static int initialBallYSpeed = 200;
+static int aiSpeed = 350;
+static int initialBallXSpeed = 250;
+static int initialBallYSpeed = 40;
 
 SDL_Renderer* gRenderer = NULL;
 SDL_Texture *gBall;
@@ -109,6 +109,9 @@ int main(int argc, char **argv)
 	// The window we'll be rendering to
 	SDL_Window* window = NULL;
 
+	// random seed
+	srand(time(NULL));
+
 	// Initialize SDL
 	window = initSDL(window);
 
@@ -122,10 +125,12 @@ int main(int argc, char **argv)
 			GameManager::screenW/2);
 	aiLeft.init();
 
+	// right ai
 	AiPaddle aiRight(gRenderer, GameManager::screenW-20, GameManager::screenH/2, aiSpeed, false,
 			GameManager::screenW/2);
 	aiRight.init();
 
+	// ball
 	Ball ball(gRenderer, GameManager::screenW/2, GameManager::screenH/2,
 				initialBallXSpeed, initialBallYSpeed);
 	ball.init();
@@ -133,7 +138,9 @@ int main(int argc, char **argv)
 	GameManager manager(gRenderer, ball, pp, aiLeft, aiRight);
 	manager.init(GameManager::screenW, GameManager::screenH);
 
-	// main loop
+	// set initial positions
+	manager.restartRound();
+	// start main loop
 	mainLoop(manager);
 
 	// Destroy window

@@ -19,8 +19,8 @@ void Ball::init() {
 	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
 
 	// load hit sound
-	plop = Mix_LoadMUS("res/pong.ogg");
-	if (plop == NULL) {
+	paddleHit = Mix_LoadMUS("res/pong.ogg");
+	if (paddleHit == NULL) {
 		cerr << "unable to load sound: " << SDL_GetError() << endl;
 		exit(-1);
 	}
@@ -64,13 +64,11 @@ SDL_Rect Ball::getRect() {
 
 void Ball::hit() {
 
-	// increase x velocity
-	if (this->xVelocity < this->maxSpeed) {
-		this->xVelocity += 50;
-	}
+	// 5% x speed increase per hit
+	setXVelocity(getXVelocity() *1.05);
 
 	// play sound
-	int err = Mix_PlayMusic(plop, 0);
+	int err = Mix_PlayMusic(paddleHit, 0);
 	if (err  == -1) {
 		cerr << "could not play sound" << SDL_GetError() << endl;
 		exit(-1);
@@ -82,6 +80,6 @@ void Ball::hit() {
 Ball::~Ball() {
 	SDL_DestroyTexture(tex);
 
-	Mix_FreeMusic(plop);
+	Mix_FreeMusic(paddleHit);
 }
 
