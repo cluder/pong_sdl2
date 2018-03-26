@@ -95,10 +95,6 @@ void AiPaddle::update(Uint32 tpf, Ball &ball) {
 }
 
 void AiPaddle::init() {
-	tex = IMG_LoadTexture(renderer, "res/paddle_r.png");
-
-	// query and save texture size
-	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
 
 	// tint color red
 	if (isLeft) {
@@ -106,7 +102,6 @@ void AiPaddle::init() {
 	} else {
 		SDL_SetTextureColorMod(tex, 0x00, 0x00, 0xF0);
 	}
-
 
 	// adjust x location for the right paddle
 	if (this->isLeft == false) {
@@ -116,31 +111,8 @@ void AiPaddle::init() {
 	y -= texH/2;
 }
 
-void AiPaddle::render() {
-	// draw paddle
-	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
-
-	SDL_Rect dstRect;
-	dstRect.x = x;
-	dstRect.y = y;
-	dstRect.h = texH;
-	dstRect.w = texW;
-
-	SDL_RenderCopy(renderer, tex, NULL, &dstRect);
-}
-
-SDL_Rect AiPaddle::getRect() {
-	SDL_Rect rect;
-	rect.x = x;
-	rect.y = y;
-	rect.w = texW;
-	rect.h = texH;
-
-	return rect;
-}
-
 AiPaddle::~AiPaddle() {
-	SDL_DestroyTexture(tex);
+
 }
 
 void AiPaddle::resetPos() {

@@ -51,7 +51,9 @@ void GameManager::render() {
 
 	drawUI();
 
-	player.render();
+	if (player.isDisabled() == false) {
+		player.render();
+	}
 
 	ball.render();
 
@@ -107,7 +109,7 @@ void GameManager::checkCollision() {
 
 	SDL_Rect result;
 
-	if (player.isDisabled() == false && SDL_IntersectRect(&playerRect,&ballRect, &result) == SDL_TRUE) {
+	if (player.isDisabled() == false && SDL_IntersectRect(&playerRect, &ballRect, &result) == SDL_TRUE) {
 		fprintf(stderr, "player hit\n");
 		// ball hit player paddle
 		// reset ball to player edge

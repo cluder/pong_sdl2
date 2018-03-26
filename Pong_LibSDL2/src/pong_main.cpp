@@ -116,22 +116,22 @@ int main(int argc, char **argv)
 	window = initSDL(window);
 
 	// create entities
-	PlayerPaddle pp(gRenderer, 20, GameManager::screenH/2, playerSpeed);
+	PlayerPaddle pp(gRenderer, "res/paddle_r.png", 20, GameManager::screenH/2, playerSpeed);
 	pp.init();
 	pp.setDisabled(true);
 
 	// left ai
-	AiPaddle aiLeft(gRenderer, 20, GameManager::screenH/2, aiSpeed, true,
+	AiPaddle aiLeft(gRenderer, "res/paddle_r.png", 20, GameManager::screenH/2, aiSpeed, true,
 			GameManager::screenW/2);
 	aiLeft.init();
 
 	// right ai
-	AiPaddle aiRight(gRenderer, GameManager::screenW-20, GameManager::screenH/2, aiSpeed, false,
+	AiPaddle aiRight(gRenderer, "res/paddle_r.png", GameManager::screenW-20, GameManager::screenH/2, aiSpeed, false,
 			GameManager::screenW/2);
 	aiRight.init();
 
 	// ball
-	Ball ball(gRenderer, GameManager::screenW/2, GameManager::screenH/2,
+	Ball ball(gRenderer, "res/ball.png", GameManager::screenW/2, GameManager::screenH/2,
 				initialBallXSpeed, initialBallYSpeed);
 	ball.init();
 

@@ -14,10 +14,6 @@ using namespace std;
 
 void Ball::init() {
 
-	// loads ball texture
-	tex = IMG_LoadTexture(pRenderer, "res/ball.png");
-	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
-
 	// load hit sound
 	paddleHit = Mix_LoadMUS("res/pong.ogg");
 	if (paddleHit == NULL) {
@@ -41,29 +37,7 @@ void Ball::update(Uint32 tpf) {
 	y += yVelocity * tpf1000;
 }
 
-// draws the ball at position x,y
-void Ball::render() {
-	SDL_Rect dstRect;
-	dstRect.x = x;
-	dstRect.y = y;
-	dstRect.h = texH;
-	dstRect.w = texW;
-
-	SDL_RenderCopy(pRenderer, tex, NULL, &dstRect);
-}
-
-SDL_Rect Ball::getRect() {
-	SDL_Rect ballRect;
-	ballRect.x = x;
-	ballRect.y = y;
-	ballRect.w = texW;
-	ballRect.h = texH;
-
-	return ballRect;
-}
-
 void Ball::hit() {
-
 	// 5% x speed increase per hit
 	setXVelocity(getXVelocity() *1.05);
 
@@ -73,13 +47,11 @@ void Ball::hit() {
 		cerr << "could not play sound" << SDL_GetError() << endl;
 		exit(-1);
 	}
-
 }
 
-// free the texture
 Ball::~Ball() {
-	SDL_DestroyTexture(tex);
-
-	Mix_FreeMusic(paddleHit);
+	if (paddleHit != NULL) {
+		Mix_FreeMusic(paddleHit);
+	}
 }
 

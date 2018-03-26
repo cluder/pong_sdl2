@@ -14,39 +14,26 @@
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_mixer.h"
 
+#include "BaseEntity.h"
+
 using namespace std;
 
-class Ball {
+class Ball : public BaseEntity {
 public:
-	Ball(SDL_Renderer* gRenderer, int x, int y, float initXSpeed, float initYSpeed)
-		:pRenderer(gRenderer), x(x), y(y),
-		 initialXSpeed(initXSpeed), initialYSpeed(initYSpeed)
-		{};
+	// constructor
+	Ball(SDL_Renderer* renderer, string texture, int x, int y, float xSpeed, float ySpeed) :
+		// call base constructor
+		BaseEntity(renderer, texture, x, y),
+		// init our fields
+		initialXSpeed(xSpeed), initialYSpeed(ySpeed) {};
 
 	void init();
-	void render();
 	void update(Uint32 tpf);
 	virtual ~Ball();
 
 	// hit a paddle - increase speed
 	void hit();
 	void resetSpeed() {xVelocity = initialXSpeed; yVelocity = initialYSpeed;}
-	SDL_Rect getRect();
-
-	float getCenterY() {return this->y + this->texH/2 ;}
-	float getCenterX() {return this->x + this->texW/2 ;}
-
-	int getX() {return x;}
-	void setX(int x) {this->x = x;}
-
-	int getTexW() {return this->texW;}
-	void setTexW(int x) {this->texW = x;}
-
-	int getY() {return y;}
-	void setY(int y) {this->y = y;}
-
-	int getTexH() {return this->texH;}
-	void setTexH(int y) {this->texH = y;}
 
 	float getSpeed() const {return speed;}
 	void setSpeed(float speed) {this->speed = speed;}
@@ -78,13 +65,6 @@ public:
 	}
 
 private:
-	SDL_Renderer *pRenderer = NULL;
-	SDL_Texture *tex = NULL;
-	float x;
-	float y;
-	int texW = 0;
-	int texH = 0;
-
 	// movement speed
 	float initialXSpeed;
 	float initialYSpeed;

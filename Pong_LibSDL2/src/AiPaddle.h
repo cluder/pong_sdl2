@@ -14,38 +14,28 @@
 
 using namespace std;
 
-class AiPaddle {
+class AiPaddle : public BaseEntity {
 public:
-	AiPaddle(SDL_Renderer* renderer, float x, float y, float speed, bool isLeft,
+	AiPaddle(SDL_Renderer* renderer, string texture, float x, float y, float speed, bool isLeft,
 				float sightRange)
-		: renderer(renderer), x(x), y(y),
-		  initialX(x), initialY(y),
-		  speed(speed), isLeft(isLeft),
-		  sightRange(sightRange)
+	// base constructor
+	: BaseEntity(renderer, texture, x, y),
+	  // init our fields
+	  initialX(x), initialY(y), speed(speed), isLeft(isLeft), sightRange(sightRange)
 		{};
 
 	void init();
-	void render();
 	void update(Uint32 tpf, Ball &ball);
 
 	void resetPos();;
 
-	SDL_Rect getRect();
-
 	virtual ~AiPaddle();
 
 private:
-	SDL_Renderer* renderer = NULL;
-	float x;
-	float y;
 	float initialX;
 	float initialY;
 	float speed;
 	bool isLeft;
-
-	int texW = 0;
-	int texH = 0;
-	SDL_Texture* tex = NULL;
 
 	float yVelocity = speed;
 
