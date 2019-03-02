@@ -76,7 +76,7 @@ private:
 	float yVelocity = initialYSpeed;
 
 	// sound
-	Mix_Music* paddleHit = NULL;
+	Mix_Chunk * paddleHit = NULL;
 };
 
 #endif /* SRC_BALL_H_ */

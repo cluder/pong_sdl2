@@ -17,6 +17,10 @@ BaseEntity::BaseEntity(SDL_Renderer *renderer, string texture,
 	// loads texture
 	tex = IMG_LoadTexture(renderer, texture.c_str());
 
+	if (tex == NULL) {
+		cerr << "unable to load png: " << SDL_GetError() << endl;
+	}
+
 	// query the texture to save the width and height
 	SDL_QueryTexture(tex, NULL, NULL, &texW, &texH);
 }

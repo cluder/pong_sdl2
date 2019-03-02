@@ -15,7 +15,7 @@ using namespace std;
 void Ball::init() {
 
 	// load hit sound
-	paddleHit = Mix_LoadMUS("res/pong.ogg");
+	paddleHit = Mix_LoadWAV("res/pong.wav");
 	if (paddleHit == NULL) {
 		cerr << "unable to load sound: " << SDL_GetError() << endl;
 		exit(-1);
@@ -42,7 +42,7 @@ void Ball::hit() {
 	setXVelocity(getXVelocity() *1.05);
 
 	// play sound
-	int err = Mix_PlayMusic(paddleHit, 0);
+	int err = Mix_PlayChannel(-1, paddleHit, 0);
 	if (err  == -1) {
 		cerr << "could not play sound" << SDL_GetError() << endl;
 		exit(-1);
@@ -51,7 +51,7 @@ void Ball::hit() {
 
 Ball::~Ball() {
 	if (paddleHit != NULL) {
-		Mix_FreeMusic(paddleHit);
+		Mix_FreeChunk(paddleHit);
 	}
 }
 

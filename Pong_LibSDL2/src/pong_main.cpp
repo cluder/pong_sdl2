@@ -1,6 +1,11 @@
+
+#define SDL_MAIN_HANDLED
+
 #include <iostream>
+#include <ctime>
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
+#include "SDL2/SDL_mixer.h"
 
 #include "GameManager.h"
 #include "PlayerPaddle.h"
@@ -54,7 +59,7 @@ SDL_Window* initSDL(SDL_Window* window)
 	IMG_Init(IMG_INIT_PNG);
 
 	// init sdl_mixer ogg support
-	int flags = MIX_INIT_OGG;
+	int flags = 0;
 	int initted = Mix_Init(flags);
 
 	if ((initted & flags) != flags) {
@@ -62,7 +67,8 @@ SDL_Window* initSDL(SDL_Window* window)
 		exit (-1);
 	}
 
-	int err = Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+	// default=16 bit
+	int err = Mix_OpenAudio(48000, MIX_DEFAULT_FORMAT, 2, 1024);
 	if (err < 0) {
 		cerr << "error initializing SDL_mixer:" << SDL_GetError() << endl;
 		exit (-1);
