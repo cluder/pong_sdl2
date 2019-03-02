@@ -30,14 +30,10 @@ public:
 
 	void resetPos() {x = initialX; y = initialY -texH/2; };
 
-	void setDisabled(bool value) {this->disabled = value;}
-	bool isDisabled() {return disabled;}
 private:
 	float initialX;
 	float initialY;
 	float speed;
-
-	bool disabled = false;
 
 	bool moveUp = false;
 	bool moveDown = false;

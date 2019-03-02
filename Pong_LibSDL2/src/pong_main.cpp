@@ -22,6 +22,10 @@ static int aiSpeed = 350;
 static int initialBallXSpeed = 250;
 static int initialBallYSpeed = 40;
 
+// when set to true, two a.i. player will play
+// when set to false, the player can control the left paddle
+static bool playerDisabled = true;
+
 SDL_Renderer* gRenderer = NULL;
 SDL_Texture *gBall;
 
@@ -124,12 +128,14 @@ int main(int argc, char **argv)
 	// create entities
 	PlayerPaddle pp(gRenderer, "res/paddle_r.png", 20, GameManager::screenH/2, playerSpeed);
 	pp.init();
-	pp.setDisabled(true);
+	pp.setDisabled(playerDisabled);
+
 
 	// left ai
 	AiPaddle aiLeft(gRenderer, "res/paddle_r.png", 20, GameManager::screenH/2, aiSpeed, true,
 			GameManager::screenW/2);
 	aiLeft.init();
+	aiLeft.setDisabled(!playerDisabled);
 
 	// right ai
 	AiPaddle aiRight(gRenderer, "res/paddle_r.png", GameManager::screenW-20, GameManager::screenH/2, aiSpeed, false,

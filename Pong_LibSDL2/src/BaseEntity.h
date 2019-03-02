@@ -44,6 +44,9 @@ public:
 	void setTexH(int val) {this->texH = val;}
 
 	SDL_Rect getRect();
+
+	void setDisabled(bool value) {this->disabled = value;}
+	bool isDisabled() {return disabled;}
 protected:
 	SDL_Renderer *renderer;
 	SDL_Texture *tex = NULL;
@@ -51,6 +54,8 @@ protected:
 	float y;
 	int texW = 0;
 	int texH = 0;
+
+	bool disabled = false;
 };
 
 #endif /* SRC_BASEENTITY_H_ */

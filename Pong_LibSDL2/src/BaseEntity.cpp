@@ -14,6 +14,7 @@ BaseEntity::BaseEntity(SDL_Renderer *renderer, string texture,
 	this->x = x;
 	this->y = y;
 
+	this->disabled = false;
 	// loads texture
 	tex = IMG_LoadTexture(renderer, texture.c_str());
 
@@ -26,6 +27,9 @@ BaseEntity::BaseEntity(SDL_Renderer *renderer, string texture,
 }
 
 void BaseEntity::render() {
+	if (disabled) {
+		return;
+	}
 	SDL_Rect dstRect = getRect();
 	SDL_RenderCopy(renderer, tex, NULL, &dstRect);
 }

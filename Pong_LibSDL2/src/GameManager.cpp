@@ -51,9 +51,7 @@ void GameManager::render() {
 
 	drawUI();
 
-	if (player.isDisabled() == false) {
-		player.render();
-	}
+	player.render();
 
 	ball.render();
 
