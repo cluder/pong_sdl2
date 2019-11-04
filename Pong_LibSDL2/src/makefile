@@ -1,34 +1,26 @@
 # append CXXFLAGS
 override CXXFLAGS += -c -g -I../SDL2/include
 
-OBJS=pong_main.o AiPaddle.o PlayerPaddle.o GameManager.o BaseEntity.o Ball.o
+SRCS = $(wildcard *.cpp)
+OBJS = $(SRCS:.c=.o)
+
 LDLIBS=-lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer
 EXENAME=pong
 EXEDIR=..
+EXEPATH=$(EXEDIR)/$(EXENAME)
 
-all: $(EXEDIR)/$(EXENAME);
+all: $(EXEPATH);
 
+# $@ = target
+# $^ = prerequisite
 $(EXEDIR)/pong: pong_main.o AiPaddle.o PlayerPaddle.o GameManager.o BaseEntity.o Ball.o
-	g++ -g -o ../pong $(OBJS)  $(LDLIBS)
+	$(CXX) -g -o $@ $(OBJS)  $(LDLIBS)
 	@echo $(EXENAME) successully created
 
-pong_main.o: pong_main.cpp
-	g++ $(CXXFLAGS) pong_main.cpp
+# generic rule to build .o from .cpp
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $^
 
-AiPaddle.o: AiPaddle.cpp
-	g++ $(CXXFLAGS)  AiPaddle.cpp
-
-PlayerPaddle.o: PlayerPaddle.cpp
-	g++ $(CXXFLAGS) PlayerPaddle.cpp
-
-GameManager.o: GameManager.cpp
-	g++ $(CXXFLAGS) GameManager.cpp
-
-BaseEntity.o: BaseEntity.cpp
-	g++ $(CXXFLAGS) BaseEntity.cpp
-
-Ball.o: Ball.cpp
-	g++ $(CXXFLAGS) Ball.cpp
-
+.PHONY:	clean
 clean:
-	rm -f *.o  ../$(EXENAME)
+	rm -f *.o  $(EXEPATH)
