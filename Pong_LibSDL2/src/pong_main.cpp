@@ -83,7 +83,6 @@ SDL_Window* initSDL(SDL_Window* window)
 	return window;
 }
 
-
 void mainLoop(GameManager &manager)
 {
 	// main loop
@@ -114,22 +113,12 @@ void mainLoop(GameManager &manager)
 	} while (!quit);
 }
 
-int main(int argc, char **argv)
+void game_main() 
 {
-	// The window we'll be rendering to
-	SDL_Window* window = NULL;
-
-	// random seed
-	srand(time(NULL));
-
-	// Initialize SDL
-	window = initSDL(window);
-
 	// create entities
 	PlayerPaddle pp(gRenderer, "res/paddle_r.png", 20, GameManager::screenH/2, playerSpeed);
 	pp.init();
 	pp.setDisabled(playerDisabled);
-
 
 	// left ai
 	AiPaddle aiLeft(gRenderer, "res/paddle_r.png", 20, GameManager::screenH/2, aiSpeed, true,
@@ -152,16 +141,36 @@ int main(int argc, char **argv)
 
 	// set initial positions
 	manager.restartRound();
+
 	// start main loop
 	mainLoop(manager);
+}
+
+
+int main(int argc, char **argv)
+{
+	// The window we'll be rendering to
+	SDL_Window* window = NULL;
+
+	// random seed
+	srand(time(NULL));
+
+	// Initialize SDL
+	window = initSDL(window);
+
+	// game logic
+	game_main();
 
 	// Destroy window
 	SDL_DestroyWindow(window);
 
 	// Quit SDL subsystems
 	IMG_Quit();
-	SDL_Quit();
 	TTF_Quit();
+	Mix_Quit();
+	Mix_CloseAudio();
+
+	SDL_Quit();
 
 	return 0;
 }

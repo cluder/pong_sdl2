@@ -62,7 +62,8 @@ void PlayerPaddle::update(Uint32 tpf) {
 	}
 }
 
-PlayerPaddle::~PlayerPaddle() {
-    SDL_DestroyTexture(tex);
+PlayerPaddle::~PlayerPaddle() 
+{
+
 }
 

@@ -26,6 +26,8 @@ public:
 		: pRenderer(pRenderer), ball(b), player(player),
 		  aiLeft(aiLeft), aiRight(aiRight) {};
 
+	GameManager(const GameManager &orig) = delete;
+
 	void init(int screenW, int screenH);
 
 	bool handleInput();

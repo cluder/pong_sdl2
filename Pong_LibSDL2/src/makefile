@@ -1,5 +1,5 @@
 # append CXXFLAGS
-override CXXFLAGS += -c -g -I../SDL2/include
+override CXXFLAGS += -Wextra -c -g 
 
 SRCS = $(wildcard *.cpp)
 OBJS = $(SRCS:.c=.o)
@@ -18,8 +18,9 @@ $(EXEDIR)/pong: pong_main.o AiPaddle.o PlayerPaddle.o GameManager.o BaseEntity.o
 	@echo $(EXENAME) successully created
 
 # generic rule to build .o from .cpp
-%.o: %.cpp
+%.o: %.cpp %.h
 	$(CXX) $(CXXFLAGS) $^
+	ctags $^ 
 
 .PHONY:	clean
 clean:

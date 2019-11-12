@@ -6,8 +6,6 @@
  */
 
 #include "Ball.h"
-#include "SDL2/SDL_mixer.h"
-#include <iostream>
 #include "GameManager.h"
 
 using namespace std;

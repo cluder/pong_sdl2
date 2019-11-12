@@ -8,9 +8,8 @@
 #include "GameManager.h"
 
 GameManager::~GameManager() {
-	// segfaults ? :(
-//	TTF_CloseFont(this->fpsFont);
-//	TTF_CloseFont(this->scoreFont);
+	TTF_CloseFont(fpsFont);
+	TTF_CloseFont(scoreFont);
 }
 
 void GameManager::init(int screenW, int screenH) {
@@ -24,7 +23,7 @@ void GameManager::init(int screenW, int screenH) {
 bool GameManager::handleInput() {
 	bool quit = false;
 
-	SDL_Event e;
+	SDL_Event e = {0};
 	while (SDL_PollEvent(&e) != 0)
 	{
 		if (e.type == SDL_QUIT)
@@ -212,7 +211,7 @@ void GameManager::restartRound() {
 void GameManager::renderScore(int score, int x, int y) {
 	// player score
 	string sPlayerScore = std::to_string(score);
-	SDL_Color scoreColor = { 255, 255, 255 };
+	SDL_Color scoreColor = { 255, 255, 255, 0};
 	SDL_Surface* tmpSurface = TTF_RenderText_Blended(scoreFont,
 			sPlayerScore.c_str(), scoreColor);
 	SDL_Texture* playerScoreTex = SDL_CreateTextureFromSurface(pRenderer,
@@ -249,7 +248,7 @@ void GameManager::drawUI() {
 void GameManager::drawFps() {
 	string sFps = "FPS: " +std::to_string(fps);
 
-	SDL_Color color = { 255, 255, 0 };
+	SDL_Color color = { 255, 255, 0, 0};
 	SDL_Surface* tmpSurface = TTF_RenderText_Blended(fpsFont,
 			sFps.c_str(), color);
 	SDL_Texture* tex = SDL_CreateTextureFromSurface(pRenderer,
